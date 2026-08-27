@@ -1,0 +1,19 @@
+Animal,Learned_masks,Failed_masks,Unseen_masks
+830,O,"E, D","F, A, B, C"
+780,"O, C, D",A,"E, F, B"
+777,"O, E","A, C, D","F, B"
+735,"O, A, B, C, D",,"E, F"
+683,"O, A, B, C, D",,"E, F"
+655,"O, A, B, C, D",,"E, F"
+589,O,"C, D","E, F, A, B"
+585,"O, A, B",,"E, F, C, D"
+078,"O, E",A,"F, B, C, D"
+077,"O, E",,"F, A, B, C, D"
+076,"O, E, F, A, C",D,B
+073,"O, E, F, A, C, D",,B
+072,"O, E","F, A","B, C, D"
+070,"O, E, A",D,"F, B, C"
+069,"O, E, F","A, D","B, C"
+067,"O, E, F","A, C, D",B
+049,"O, E","F, A, D","B, C"
+047,O,"A, D","E, F, B, C"

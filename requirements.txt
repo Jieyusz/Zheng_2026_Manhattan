@@ -1,0 +1,9 @@
+numpy
+scipy
+pandas
+matplotlib
+tqdm
+networkx
+pyarrow          # Parquet engine used by pandas for data/figure_data/*.parquet
+fastparquet      # Alternative Parquet engine (useful for some edge cases)
+pytest           # Test runner for tests/

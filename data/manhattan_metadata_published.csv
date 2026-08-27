@@ -1,0 +1,189 @@
+Nickname,Sex,Age,Genotype,Room,Condition,Config_label_list,Notes
+Z9_d2,M,116,BL6J,C_large,Single_north,"D, A, C",Cut short due to memory glitches of SpinView
+Z9_d1,M,102,BL6J,C_large,Single_north,"O, D",two teleporting during the session from Out to Home
+Z8_d2,M,104,BL6J,C_large,Single_north,"D, A, C",
+Z8_d1,M,101,BL6J,C_large,Single_north,"O, D",
+Y2_a1,M,62,BL6J,E_small,Single_west,"O, D",
+Y1_a1,M,62,BL6J,C_large,Single_west,"O, D",
+X3_a1,M,90,BL6J,C_large,Single_west,"O, D",
+W2_a1,F,95,BL6J,C_large,Single_west,"O, D","Tracking is a bit messy, goes towards the rwd_2 light a lot; reward 2 light fixing pending? "
+W1_a1,F,94,BL6J,E_small,Single_west,"O, D",Room was entered to check on maze
+V2_t1,M,88,BL6J,E_small,Single_west,"A, B, A, C",
+V2_a1,M,89,BL6J,E_small,Single_west,"O, A","Video is slightly dim, one light was accidentally disconnected"
+V1_a1,M,88,BL6J,E_small,Single_west,"O, A, A",
+T3_a1,F,95,BL6J,E_small,Single_west,"O, D",
+T2_a1,F,95,BL6J,C_large,Single_west,"O, D",
+T1_a1,F,90,BL6J,E_small,Single_west,"O, A, A",
+S4_t1,F,91,BL6J,E_small,Single_west,"C, A, C, B",
+S4_a1,F,90,BL6J,E_small,Single_west,"O, A",
+S3_t1,F,86,BL6J,C_large,Single_west,"C, B, C, A",
+S3_a1,F,85,BL6J,C_large,Single_west,"O, A",
+S2_a1,F,86,BL6J,E_small,Single_west,"O, A, A",
+S1_t1,F,85,BL6J,E_small,Single_west,"C, A, C, B",
+S1_a1,F,84,BL6J,E_small,Single_west,"O, A",
+R4_a1,F,79,BL6J,C_large,Single_west,"O, A, A",
+R3_a1,F,79,BL6J,E_small,Single_west,"O, A, A",
+R2_t1,F,77,BL6J,E_small,Single_west,"C, B, C, A",
+R2_a1,F,76,BL6J,E_small,Single_west,"O, A",
+R1_t1,F,77,BL6J,C_large,Single_west,"C, A_flipped, C, B",
+R1_a1,F,76,BL6J,C_large,Single_west,"O, A",
+Q4_a1,M,95,BL6J,C_large,Single_west,"O, A, A",
+Q3_a1,M,89,BL6J,C_large,Single_west,"O, A, A",
+Q2_a1,M,88,BL6J,E_small,Single_west,"O, A, A","Failed second A, 6 green dots"
+O2_t1,M,93,BL6J,E_small,Single_west,"C, A, C",
+O2_a1,M,92,BL6J,E_small,Single_west,"O, A",
+N4_a1,M,71,BL6J,C_large,Single_west,"O, A",Failed A mask. Experimenter entered room during A mask to trap mouse in maze
+N3_t1,M,72,BL6J,E_small,Single_west,"A, B, A, C",
+N3_a1,M,71,BL6J,E_small,Single_west,"O, A",
+N2_t1,M,70,BL6J,E_small,Single_west,"C, B, C, A",Room E door LED stayed on after C to B mask change
+N2_a1,M,69,BL6J,E_small,Single_west,"O, A",
+M8_d2,M,107,BL6J,C_large,Single_north,"D, A, C",
+M8_d1,M,92,BL6J,C_large,Single_north,"O, D",
+M7_d1,M,91,BL6J,C_large,Single_north,"O, D",
+M6_d1,M,89,BL6J,C_large,Single_north,"O, D",Mouse teleported during Mask O training from Out to Home (one bout) 
+M5_d2,M,102,BL6J,C_large,Single_north,"D, A, C",
+M4_t1,M,65,BL6J,C_large,Single_west,"C, B, C, A",
+M4_a1,M,64,BL6J,C_large,Single_west,"O, A","Mouse wasn’t triggering water ports on O mask, room was entered six times to trap the mouse and replace tape on water port"
+M3_t1,M,65,BL6J,E_small,Single_west,"C, A, C, B",
+M3_a1,M,64,BL6J,E_small,Single_west,"O, A",
+M2_t1,M,63,BL6J,E_small,Single_west,"C, B, C, A",Room was entered at 6:44:15 and exited at 6:45:37 but no mask change
+M2_a1,M,62,BL6J,E_small,Single_west,"O, A",Room E door LED sometimes stays on even after leaving the room
+M1_t1,M,63,BL6J,C_large,Single_west,"C, A, C, B",
+M1_a1,M,62,BL6J,C_large,Single_west,"O, A",
+H3_t1,F,80,BL6J,C_large,Single_west,"A, C, A, B",
+H3_a1,F,79,BL6J,C_large,Single_west,"O, A",
+H2_t1,F,77,BL6J,C_large,Single_west,"B, C, B, A",
+H2_a1,F,76,BL6J,C_large,Single_west,"O, A",Took a long time to get familiar with waterports
+H1_t1,F,75,BL6J,C_large,Single_west,"A, C, A, B",
+H1_a1,F,74,BL6J,C_large,Single_west,"O, A",
+F2_t1,F,75,BL6J,C_large,Single_west,"B, A, B, C",
+F2_a1,F,74,BL6J,C_large,Single_west,"O, A",
+F1_t1,F,73,BL6J,C_large,Single_west,"A, B, A, C",
+F1_a1,F,72,BL6J,C_large,Single_west,"O, A",
+E4_t1,F,78,BL6J,C_large,Single_west,"B, C, B, A",
+E4_a1,F,77,BL6J,C_large,Single_west,"O, A",
+E3_t1,F,76,BL6J,C_large,Single_west,"B, A, B, C",
+E3_a1,F,75,BL6J,C_large,Single_west,"O, A",Max out time for the first day
+E2_t1,F,74,BL6J,C_large,Single_west,"A, C, A, B",Max out time but reached minimum in all cases
+E2_a1,F,73,BL6J,C_large,Single_west,"O, A",First reward in two minutes
+E1_t1,F,72,BL6J,C_large,Single_west,"A, B, A, C",All reached maximum: declining performance over days
+E1_a1,F,71,BL6J,C_large,Single_west,"O, A",15 rewards in total – afraid of human handling? (picking up from the maze?)
+D4_t1,F,93,BL6J,C_large,Single_west,"A, B, A, C",
+D4_a1,F,92,BL6J,C_large,Single_west,"O, A",
+D3_t1,F,91,BL6J,C_large,Single_west,"B, A, B, C",Two reward at the entrance were not included in the analysis as the experimenter was in the room: check room status file for description
+D3_a1,F,90,BL6J,C_large,Single_west,"O, A",
+A3_t1,F,84,BL6J,C_large,Single_west,"B, C, B, A","B and C reached maximum time, sleep at the last hole to exit habitually. For config 2 and 3: only outbound runs, inbound cut short by experimenter. Performance improved over day"
+A3_a1,F,83,BL6J,C_large,Single_west,"O, A",
+830_a2,M,70,HO,C_large,Single_west,"O, E, D",
+830_a1,M,69,HO,C_large,Single_west,"O, E",Training session truncated 
+809_a1,M,69,WT,C_large,Single_west,"O, D",
+780_t1,F,82,HO,E_small,Single_west,"AO, A, D",For some reason solved Mask D 
+780_o2,F,111,HO,E_small,Single_west,C,
+780_o1,F,110,HO,E_small,Single_west,"DT, C",
+780_n2,F,105,HO,E_small,Single_west,"DT, D",
+780_n1,F,104,HO,E_small,Single_west,"O, D, DT","During Mask O, went in to check the water port condition"
+780_m2,F,91,HO,E_small,Single_west,"O, D, C","Video appeared dark, potentially one infrared light was turned off"
+780_m1,F,90,HO,E_small,Single_west,"O, D",Mouse ended up sleeping in the maze for long
+780_a3,F,78,HO,E_small,Single_west,"AO, A, D",Mouse ended up sleeping in the maze for long
+780_a2,F,77,HO,E_small,Single_west,"O, A, D, AO",
+780_a1,F,76,HO,E_small,Single_west,"O, A",training was truncated 
+777_m1,F,111,HO,C_large,Single_west,"O, E, C",
+777_a3,F,78,HO,C_large,Single_west,"AO, A, D",
+777_a2,F,77,HO,C_large,Single_west,"O, A, D, AO",
+777_a1,F,76,HO,C_large,Single_west,"O, A",Went in for ladder and several times for training the mouse
+735_t1,M,84,HO,C_large,Single_west,"A, C, B",
+735_m1,M,90,HO,C_large,Single_west,"A, C, B, D",
+735_a1,M,83,HO,C_large,Single_west,"O, A","Finished very early, but with confirmed phenotype"
+721_m1,F,69,WT,E_small,Single_west,"A, D, A",failed A first session
+721_a1,F,62,WT,E_small,Single_west,"O, A, D","Room E, learned OA, not D"
+683_t2,M,90,HO,C_large,Single_west,D,
+683_t1,M,89,HO,C_large,Single_west,A,
+683_o2,M,154,HO,C_large,Single_west,"C, B, D",
+683_o1,M,153,HO,C_large,Single_west,"A, AO, A, AO",
+683_n2,M,119,HO,C_large,Single_west,"AO, A, AO, A, AO",
+683_n1,M,118,HO,C_large,Single_west,"C, B, D",First hour in semi-dark lighting – light fixed at 9:55
+683_m3,M,97,HO,C_large,Single_west,"A, C, B, D",
+683_m2,M,96,HO,C_large,Single_west,"D, C",
+683_m1,M,95,HO,C_large,Single_west,"O, A",
+683_a1,M,88,HO,C_large,Single_west,"O, A",
+658_t2,M,96,WT,C_large,Single_west,D,
+658_t1,M,95,WT,C_large,Single_west,"A, C, B",
+658_a1,M,94,WT,C_large,Single_west,"O, A",Unsure about reward 2 LED reading problem
+655_t2,M,89,HO,C_large,Single_west,D,
+655_t1,M,88,HO,C_large,Single_west,"A, C, B",
+655_a1,M,87,HO,C_large,Single_west,"O, A",First day locked in maze to trigger first reward
+589_a5,F,165,HO,C_large,Single_west,C,"Power outage, restarted video until storage was full "
+589_a4,F,165,HO,C_large,Single_west,"O, D",
+589_a3,F,164,HO,C_large,Single_west,"O, D_flipped",Previous days were all learning O mask
+585_a5,F,111,HO,C_large,Single_west,"A, B",
+585_a4,F,110,HO,C_large,Single_west,"O, A","Skipping two days of A,A, U experiments inbetween that have no results"
+585_a1,F,106,HO,C_large,Single_west,"O, A","Acortical animal, O training had locking part "
+191_t1,M,88,WT,E_small,Single_west,"A, D",
+191_m3,M,171,WT,E_small,Single_west,"A, D, C, B",
+191_m2,M,115,WT,E_small,Single_west,"A, D, C",
+191_m1,M,93,WT,E_small,Single_west,"A, D, C",
+191_a1,M,87,WT,E_small,Single_west,"O, E, A, A",Teleported in Mask O and Mask A training: separating the two configurations 
+189_t1,M,86,WT,E_small,Single_west,"A, D",
+189_m3,M,170,WT,E_small,Single_west,"A, D, C",
+189_m2,M,114,WT,E_small,Single_west,"A, D, C",Note: video recording broke at 15 minutes in Mask A. Discarded all rewards afterwards. Restarted in Mask D in Room E
+189_m1,M,92,WT,E_small,Single_west,"A, D, C",There are some tracking errors detected but not visible on trajectory visualizations. Use with caution
+189_a1,M,85,WT,E_small,Single_west,"O, E, A",Teleported during Mask O training. 
+156_t1,F,71,WT,E_small,Single_west,"A, D",
+156_m3,F,151,WT,E_small,Single_west,"A, D, C, B",
+156_m2,F,95,WT,E_small,Single_west,"A, D, C",
+156_m1,F,77,WT,E_small,Single_west,"A, D, C",
+156_a1,F,70,WT,E_small,Single_west,"O, E, A",removed a teleporting bout
+155_t1,F,71,WT,C_large,Single_west,"A, D",
+155_m3,F,150,WT,C_large,Single_west,"A, D, B",
+155_m2,F,94,WT,C_large,Single_west,"A, D, C",
+155_m1,F,75,WT,C_large,Single_west,"A, D, C",
+155_a1,F,70,WT,C_large,Single_west,"O, E, A","Didn’t get reward in the A configuration. , didn’t learn Mask A on Day 1 "
+154_t1,F,68,WT,C_large,Single_west,"E, A, D",Deleted a teleporting bout
+154_m3,F,149,WT,C_large,Single_west,"A, D, C",
+154_m2,F,93,WT,C_large,Single_west,"A, D, C_flipped",The third mask C was flipped by mistake
+154_m1,F,74,WT,C_large,Single_west,"A, D, C",
+154_a1,F,67,WT,C_large,Single_west,"O, E, A",Deleted 6 erroneous bouts due to human interference
+078_a1,F,72,HO,C_large,Single_west,"O, E, A",
+077_t1,F,73,HO,E_small,Single_west,"O, E",
+076_t1,F,68,HO,E_small,Single_west,"O, E, F",
+076_m3,F,109,HO,E_small,Single_west,"D, A, C",
+076_m2,F,75,HO,E_small,Single_west,"D, A",
+076_m1,F,74,HO,E_small,Single_west,"E, F, D",
+076_a1,F,67,HO,E_small,Single_west,"O, E",
+074_t1,M,66,WT,E_small,Single_west,"A, D",
+073_t3,M,68,HO,C_large,Single_west,"D, A",removed last bout in D because the experimenter moved the mouse
+073_t2r,M,67,HO,C_large,Single_west,D,
+073_t2b,M,67,HO,C_large,Single_west,"E, F, D","Glitches in video recording in the small room in the third configuration, resumed but missed a few rewards between t2 and t2r"
+073_t1,M,66,HO,C_large,Single_west,"O, E, A",Removed a very messy sortie in Mask A
+073_m4,M,109,HO,C_large,Single_west,"D, A, C",
+073_m3,M,88,HO,C_large,Single_west,"D, A, C",
+073_m2,M,75,HO,C_large,Single_west,"D, A, C",
+073_m1,M,74,HO,C_large,Single_west,"E, F, D",
+072_t2,F,67,HO,E_small,Single_west,"O, E, A",removed two teleport bouts in Mask A
+072_m1,F,75,HO,E_small,Single_west,"O, E, A, F","removed two teleport bouts in Mask A, mouse was stuck in the maze scanning the same corridor. "
+070_t3,F,68,HO,C_large,Single_west,"O, E, A, D",
+070_t2,F,67,HO,C_large,Single_west,"O, E, A",
+070_t1,F,66,HO,C_large,Single_west,"O, E",Three teleporting errors because of interference in Mask O
+070_m3,F,125,HO,C_large,Single_west,"E, D, A",
+069_t1,F,62,HO,C_large,Single_west,"O, E, A",
+069_m5,F,126,HO,C_large,Single_west,"E, F, D, F",
+069_m4,F,102,HO,C_large,Single_west,"F, E, A",
+069_m3,F,101,HO,C_large,Single_west,"E, F",
+069_m2,F,74,HO,C_large,Single_west,"E, F, D",
+069_m1,F,73,HO,C_large,Single_west,"O, E, F",
+069_a1,F,61,HO,C_large,Single_west,"O, E",
+067_t3,M,63,HO,E_small,Single_west,"E, A",
+067_t2,M,63,HO,E_small,Single_west,"O, E, A",removed one messy bout with human interference 
+067_t1,M,61,HO,E_small,Single_west,"O, E",removed one bout with human interference
+067_m5,M,126,HO,E_small,Single_west,"E, A, C",
+067_m3,M,101,HO,E_small,Single_west,"E, F, D",
+067_m2,M,75,HO,E_small,Single_west,"E, F, D",
+067_m1,M,74,HO,E_small,Single_west,"O, E, A, F, A",
+067_a1,M,61,HO,E_small,Single_west,"O, A",
+049_t3,F,85,HO,C_large,Single_west,"AO, A",
+049_t2,F,84,HO,C_large,Single_west,"O, A, D",One jumping bout due to teleporting
+049_m1,F,108,HO,C_large,Single_west,"O, E, A, F",removed human interference bout
+047_t3,F,86,HO,E_small,Single_west,"O, A",remove human interference bout x 1
+047_t2,F,85,HO,E_small,Single_west,"AO, A",
+047_t1,F,84,HO,E_small,Single_west,"O, A, D",Removed 4 human interference bout and erroneous bout
+047_a1,F,83,HO,E_small,Single_west,"O, A",Deleted two human interference bouts
