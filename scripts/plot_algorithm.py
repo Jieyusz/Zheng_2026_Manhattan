@@ -61,8 +61,7 @@ def plot_comparison_row(gs):
         _, _, he, _ = flat(ax_e, endo_err, ENDO_C, ylim=0.5)
         ax_e.set(xlabel="Traverse #", ylabel="Corridor error rate" if j == 0 else "")
         ax_e.set_xlim(0.5, XCAP + 0.5)
-        ax_e.text(0.5, 1.0, DIR_TITLE[d], transform=ax_e.transAxes, ha="center", va="bottom",
-                  fontsize=plot_utils.TICK_SIZE)
+        plot_utils.add_panel_title(ax_e, DIR_TITLE[d], fontsize=plot_utils.TICK_SIZE)
         handles = {"Q-learning": hq, "Endotaxis": he}
 
         ax_b = axes[j + 2]                               # bottleneck choice: C outbound, D homebound
@@ -72,8 +71,7 @@ def plot_comparison_row(gs):
         ax_b.set(xlabel="Traverse #", ylabel="Choice of bottleneck" if j == 0 else "")
         ax_b.set_ylim(0, 1.05)
         ax_b.set_xlim(0.5, BN + 0.5)
-        ax_b.text(0.5, 1.0, DIR_TITLE[d], transform=ax_b.transAxes, ha="center", va="bottom",
-                  fontsize=plot_utils.TICK_SIZE)
+        plot_utils.add_panel_title(ax_b, DIR_TITLE[d], fontsize=plot_utils.TICK_SIZE)
 
     # Shared y within each metric pair -> hide the inner panels' y-tick labels (frees panel width).
     axes[1].tick_params(labelleft=False)
@@ -119,8 +117,7 @@ def plot_endotaxis_learning_d(gs, H_circle_x=1, V_circle_x=2,
     seq = figure_data_dict["Wildtype D example corridor seq"]
     signal = figure_data_dict["Wildtype D example learned signal Out"]
     endotaxis.draw_walk(axes_walk, seq, signal, end_time=len(seq), end_corr=max(seq))
-    axes_walk[0].text(0.5, 1, "Mask D", ha="center", va="bottom", transform=axes_walk[0].transAxes,
-                      fontsize=plot_utils.FONT_SIZE, color=plot_utils.mask_colors["D"])
+    plot_utils.add_panel_title(axes_walk[0], "Mask D", color=plot_utils.mask_colors["D"])
 
     adj = figure_data_dict["Wildtype D example learned adjacency Out"]
     # find the adjacency matrices for plotting
@@ -169,8 +166,7 @@ def plot_endotaxis_learning_d(gs, H_circle_x=1, V_circle_x=2,
                                                n_nodes=n_nodes, V_circle_x=V_circle_x, y_scale=y_scale
                                                )
         first_mat = adj[step_idx]
-        axes_adj[k].text(0.5, 1, f"t={step_idx}", ha="center", va="bottom", transform=axes_adj[k].transAxes,
-                         fontsize=plot_utils.FONT_SIZE, color=colors[k])
+        plot_utils.add_panel_title(axes_adj[k], f"t={step_idx}", color=colors[k])
         # hide axes
         axes_adj[k].axis("off")
         axes_adj[k].set_aspect("equal", adjustable="box")
@@ -182,7 +178,6 @@ def plot_endotaxis_learning_d(gs, H_circle_x=1, V_circle_x=2,
         xs = np.arange(len(goal_signal)) + 1
         signal_colors = plot_utils.get_normalized_color_seq(goal_signal, goal_cmap)
         axes_goal[k].scatter(xs, goal_signal, color=signal_colors, zorder=config.Z_MARKER, s=config.MS_AREA_LARGE)
-        axes_goal[k].set_xlabel("Corridor")
         axes_goal[k].text(0.5, 0.99, f"t={step_idx}", ha="center", va="top",
                             transform=axes_goal[k].transAxes,
                             color=colors[k], fontsize=plot_utils.FONT_SIZE)
@@ -233,7 +228,7 @@ ax_cmp = plot_comparison_row(outer[0])
 ax_walk, ax_adj, ax_goal = plot_endotaxis_learning_d(outer[1])
 
 # Shared goal-signal ylabel for the row-2 schematic (lower half of the figure).
-FIG.text(0.78, 0.27, "Goal Signal (log)", va="center", rotation=90, fontsize=plot_utils.FONT_SIZE)
+FIG.text(0.78, 0.27, "Goal signal (log)", va="center", rotation=90, fontsize=plot_utils.FONT_SIZE)
 plot_utils.add_letter_labels(FIG, [(0.01, 0.99),  (0.27, 0.99), (0.50, 0.99), (0.77, 0.99),
                                    (0.01, 0.55), (0.37, 0.55), (0.77, 0.55) ])
 

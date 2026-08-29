@@ -63,10 +63,11 @@ MASK_D_EXAMPLE_ID = 1
 # The six consecutive (late, most-learned) traverse indices shown in the Mask D motif
 # strip (plot_d_motif.py Panel and Supplementary Video 4) -- T3_a1's last six.
 MASK_D_MOTIF_TRAVERSES = [96, 97, 98, 99, 100, 101]
-# Which animal's three route-similarity matrices are drawn as the example triplet.
-MASK_D_SIMILARITY_EXAMPLE_ID = 6
-ACORTICAL_D_SIMILARITY_EXAMPLE_ID = 2
-SIMILARITY_EXAMPLE_MIN_SIDE =10
+# Which animal's three route-similarity matrices are drawn as the example triplet is no
+# longer a constant: positional indices into the saved similarity lists went stale on every
+# regeneration (the cohort order comes from set(), which Python reshuffles per process).
+# utils.select_similarity_example picks the richest triplet by content instead, and owns its
+# own SIMILARITY_EXAMPLE_MIN_SIDE threshold.
 
 # Acortical mask-E example: the mouse/session whose early-vs-late traverses illustrate
 # the generalization concept, and which traverse indices to show. Selected in
@@ -84,8 +85,6 @@ FIGURES_DIR = _REPO_ROOT / "figures" / "pdf"
 PAPER_FIGURES_DIR = _REPO_ROOT / "figures" / "paper_figures"
 
 # DataLoader keyword arguments shared by every gen_*.py script.
-#
-# The published run applied manual fixes from a file that is not distributed; None disables them.
 DATALOADER_KWARGS = dict(
     metadata_filename="manhattan_metadata_published.csv",
     manual_fixes_path=None,
@@ -127,7 +126,8 @@ SIMILARITY_LATEX = {
 }
 
 # Traverse-direction axis labels (similarity-matrix axes): plain bout-type string ->
-# manuscript LaTeX. Same H-O / O-H / O-H' convention, just set in serif math; the
+# manuscript LaTeX. Same H-O / O-H / O-H' convention, set in Computer-Modern math (the
+# figure style keeps mathtext.fontset='cm' while annotation is sans-serif); the
 # minus is wrapped as {-} so mathtext keeps the tight hyphen (no operator spacing).
 # The plain keys match the canonical bout-type strings used elsewhere as data labels.
 TRAVERSE_LATEX = {
@@ -166,7 +166,7 @@ def __getattr__(name):
 
 def set_plot_style():
     """
-    Apply the manuscript-wide matplotlib style (serif/Computer-Modern, 300 dpi).
+    Apply the manuscript-wide matplotlib style (sans-serif annotation, 300 dpi).
 
     Single entry point for figure scripts: call once at the top of any plot_*.py
     before plotting. Delegates to :func:`manhattan_maze.plot_utils.set_style`,

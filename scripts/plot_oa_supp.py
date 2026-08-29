@@ -63,7 +63,7 @@ ax_d = FIG.add_subplot(gs00[4])
 plot_utils.plot_hole_decision_schematic(ax_d, linewidth=config.LW_HAIRLINE)  # H/O labels sit at the arrow ends (see plot_schematics)
 
 # === Row 2: D Mask O reward intervals, E Mask A reward intervals, F Mask A example speed ===
-# Panel order follows the Results narrative (reward intervals before speed).
+# Panel order follows the Results narrative (reward intervals before speed); see docs/figure_panel_audit.md.
 gs10 = gs0[1].subgridspec(1, 3, width_ratios=[1, 1, 1])
 # Panel D: Mask O reward intervals
 ax_o_int = FIG.add_subplot(gs10[0])
@@ -122,7 +122,7 @@ ax_beta.plot(bx[ok], bmean[ok], color=maskA_color, lw=config.LW_DATA)
 ax_beta.fill_between(bx[ok], (bmean - bse)[ok], (bmean + bse)[ok], color=maskA_color, alpha=0.25, lw=0)
 ax_beta.set_xlim(0.1, 0.9)
 ax_beta.set_ylim(0, 0.8)
-ax_beta.set_xlabel("fraction of the 1st journey")
+ax_beta.set_xlabel("Fraction of the 1st journey")
 ax_beta.set_ylabel(r"Forward bias $\hat{\beta}$")
 ax_beta.legend(loc="upper left", fontsize=plot_utils.TICK_SIZE)
 

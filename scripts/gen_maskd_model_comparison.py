@@ -8,7 +8,8 @@ prediction is a parameter-free analytic step and is computed inline in ``plot_al
 is learned in one pass, independent of biclique routing — no simulation needed). The Q-learning ramp,
 by contrast, has no closed form (TD's max is nonlinear and the biclique splits reward propagation
 across parallel arms, so the propagation speed is a Monte-Carlo statistic), hence the self-play
-simulation here. See ``manhattan_maze/rl_model.py`` (self-play corridor agent) for the algorithm.
+simulation here. See ``manhattan_maze/rl_model.py`` (self-play corridor agent) for the algorithm; the
+same self-play is explored/validated in ``notebooks/mask_d_q_learning.ipynb``.
 
 Saved key
 ---------

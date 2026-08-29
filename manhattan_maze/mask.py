@@ -316,7 +316,8 @@ class Mask:
             ))
 
     def plot_with_shortest_path(self, ax=None, zorder=5, path_linewidth=2, holes_list=None,
-                                home_xy=None, out_xy=None, maskd_bottleneck=False, plot_ho=False):
+                                home_xy=None, out_xy=None, maskd_bottleneck=False, plot_ho=False,
+                                title=None):
         """
         Draw the maze with the shortest-path trajectory overlaid as a colour-coded line.
 
@@ -337,6 +338,13 @@ class Mask:
             Ending point(s) appended to the path.  Defaults to ``[[out_x, out_y + 0.5]]``.
         maskd_bottleneck : bool, optional
             If True, draw horizontal and vertical red lines marking the Mask D bottleneck.
+        title : str or None, optional
+            Panel heading.  ``None`` (default) draws ``"Mask <name>"`` in the mask colour;
+            pass ``""`` to suppress it when the caller supplies its own heading or wants
+            none at all.  Same convention as ``plot_behavior.plot_bout_path``.  This used
+            to be a bare ``set_title`` that callers overwrote with a second ``set_title``;
+            headings are ``ax.text`` artists now, which stack rather than replace, so
+            suppression has to be explicit.
         plot_ho : bool, optional
             If True, annotate home (``'H'``) and out (``'O'``) ports with text labels.
 
@@ -352,11 +360,13 @@ class Mask:
         if out_xy is None:
             out_xy = [[self.out_pos[0], self.out_pos[1] + 0.5]]
         self.plot(ax)
-        ax.set_title(
-            f"Mask {self.name}",
-            fontsize=plot_utils.FONT_SIZE,
-            color=plot_utils.mask_colors[self.name],
-        )
+        if title is None:
+            title = f"Mask {self.name}"
+        if title:
+            # See PORT_MARKER_CLEARANCE: the "O" marker pokes above the top spine, so the
+            # heading hangs the standard gap above the marker rather than above the spine.
+            plot_utils.add_panel_title(ax, title, color=plot_utils.mask_colors[self.name],
+                                       pad=plot_utils.TITLE_PAD + plot_utils.PORT_MARKER_CLEARANCE)
 
         if holes_list is None:
             if self.name == "D":

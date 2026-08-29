@@ -9,8 +9,8 @@ save_path = config.parse_save_path()
 fig_width = 5.8
 fig_height = 6.2
 
-d_params = [("D_0", r"$D_0$(s)", (0, 800)), ("D_infty", r"$D_{\infty}$(s)", (0, 100)), ("delta", r"$\delta$(/traverse)", (0, 0.5))]
-e_params = [("E_0", r"$E_0$", (0, 0.8)), ("E_infty", r"$E_{\infty}$", (0, 0.25)), ("epsilon", r"$\epsilon$(/traverse)", (0, 0.2))]
+d_params = [("D_0", r"$D_0$ (s)", (0, 800)), ("D_infty", r"$D_{\infty}$ (s)", (0, 100)), ("delta", r"$\delta$ (/traverse)", (0, 0.5))]
+e_params = [("E_0", r"$E_0$", (0, 0.8)), ("E_infty", r"$E_{\infty}$", (0, 0.25)), ("epsilon", r"$\epsilon$ (/traverse)", (0, 0.2))]
 ## data loading (eventually will use the same for all files);
 figure_data_dict = utils.load_all_figure_data()
 
@@ -132,7 +132,10 @@ for k, (param_name, latex_str, ylim) in enumerate(d_params):
                                    per_animal_dict=duration_per_animal_dict)
     # hide x ticks
     d_axes[k].set_xticklabels([])
-d_axes[0].text(0.5, 1.15, "First (Mask A)", fontsize=plot_utils.FONT_SIZE, ha="center", va="bottom", transform=d_axes[0].transAxes)
+# Row headings over parameter-comparison panels: these panels carry a value/CI
+# annotation band above their top spine, so the heading hangs the standard TITLE_PAD
+# gap above the *band* rather than above the spine.
+plot_utils.add_panel_title(d_axes[0], "First (Mask A)", anchor=config.PARAM_ANNOTATION_Y)
 
 wildtype_error = figure_data_dict["Wildtype two day turn error rate fit results"][(1, "A")] # Day-1 Mask A reference
 error_fit_results = {**utils.select_by_prefix(figure_data_dict, config.GENOTYPES[:2], "A turn error rate fit results"),
@@ -239,8 +242,8 @@ for k, (param_name, latex_str, ylim) in enumerate(d_params):
     plot_param_comparisons_with_ci(gen_d_axes[k], gen_duration_results, param_name, ylim=ylim, latex_str=latex_str, colordict=mask_color_dict)
     plot_control_ci_shade(gen_d_axes[k], ct_duration_results, param_name, name_list= list(gen_duration_results.keys())),
     gen_d_axes[k].set_xticklabels([])
-gen_d_axes[0].text(0.5, 1.15, "Generalization: A, B, C", fontsize=plot_utils.FONT_SIZE, ha="center",
-                   va="bottom", transform=gen_d_axes[0].transAxes)
+plot_utils.add_panel_title(gen_d_axes[0], "Generalization: A, B, C",  # see note at panel A
+                           anchor=config.PARAM_ANNOTATION_Y)
 
 # turn error rate
 gen_error_results = gen_fit_dict("Acortical", "turn error rate")
@@ -268,8 +271,8 @@ for k, (param_name, latex_str, ylim) in enumerate(d_params):
         ylim = (0, 80)
     plot_param_comparisons_with_ci(maskd_duration_axes[k], maskd_duration_results, param_name, ylim=ylim, latex_str=latex_str,
                                    plot_shade=False)
-maskd_duration_axes[0].text(0.5, 1.15, "Mask D", fontsize=plot_utils.FONT_SIZE, ha="center",
-                            va="bottom", transform=maskd_duration_axes[0].transAxes)
+plot_utils.add_panel_title(maskd_duration_axes[0], "Mask D",  # see note at panel A
+                           anchor=config.PARAM_ANNOTATION_Y)
 # --- Right-hand cross-genotype ratio column (division; see docs/ratio_ci_method.md) ---
 # Forest panels of the fitted-parameter ratios between cohorts. Colors match the left-block
 # panels (genotype_colors / mask_colors), so no per-panel legend is needed. The x-axis is cut
@@ -282,9 +285,10 @@ def plot_ratio_panel(ax, ratio_df, series, title, xlabel=""):
         plot_utils.plot_ci_ratios(ax, sub, param_latex=config.PARAM_LATEX, color=color,
                                   offset=0.22 * (i - (len(series) - 1) / 2), xlabel=xlabel)
     ax.set_xlim(0, 1.1)  # forest-plot cutoff (see note above)
-    # set_title (not ax.text) so constrained-layout reserves room for the 2-line title,
-    # letting the three panels grow to fill the right column.
-    ax.set_title(title, fontsize=plot_utils.FONT_SIZE)
+    # The heading is a Text child of the axes, so it lands in the axes' tight bbox and
+    # constrained layout reserves room for the 2-line title on its own -- set_title is not
+    # needed for that -- letting the three panels grow to fill the right column.
+    plot_utils.add_panel_title(ax, title)
 
 maskd_ratios = figure_data_dict["Mask D genotype param ratios"]                      # Control/WT, Acortical/WT
 control_gen_ratios = figure_data_dict["Acortical generalization genotype param ratios"]  # Control/Acortical
@@ -300,7 +304,7 @@ plot_ratio_panel(FIG.add_subplot(outer[0, 1]), maskd_ratios, maskd_series, "Mask
 plot_ratio_panel(FIG.add_subplot(outer[1, 1]), control_gen_ratios, gen_mask_series,
                  "Generalization\nControl/Acortical")
 plot_ratio_panel(FIG.add_subplot(outer[2, 1]), wt_gen_ratios, gen_mask_series,
-                 "Generalization\nWildtype/Acortical", xlabel="ratio")
+                 "Generalization\nWildtype/Acortical", xlabel="Ratio")
 
 # Letters and section rules are placed from the LAID-OUT axes, not from hardcoded figure
 # fractions: constrained layout decides the real row positions, and they shift whenever the

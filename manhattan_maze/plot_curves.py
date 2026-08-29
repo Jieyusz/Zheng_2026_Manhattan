@@ -10,7 +10,7 @@ from matplotlib.legend_handler import HandlerTuple
 from manhattan_maze.utils import moving_average
 from manhattan_maze.plot_constants import (CAPSIZE_NONE, LW_DATA, LW_EMPHASIS, LW_HAIRLINE,
                                             MARKER_SIZE, MS_AREA_LARGE, MS_AREA_SMALL, TICK_SIZE,
-                                            Z_RAW_TRACE, Z_REFERENCE)
+                                            Z_MARKER, Z_RAW_TRACE, Z_REFERENCE)
 from manhattan_maze.plot_utils import format_xs_ys, genotype_colors, mask_colors
 
 __all__ = ['plot_oh_scatter_line', 'plot_array_data', 'plot_direction_mean', 'plot_fitted_curve_and_confidence',
@@ -18,7 +18,8 @@ __all__ = ['plot_oh_scatter_line', 'plot_array_data', 'plot_direction_mean', 'pl
            'distance_scalar_mappable', 'add_distance_colorbar']
 
 def plot_oh_scatter_line(ax, ys, xs=None, scatter_colors=None, markersize=MS_AREA_LARGE, labels=None, line_color="tab:grey",
-                         alpha=1, linewidth=LW_HAIRLINE, format_xy=True, **kwargs):
+                         alpha=1, linewidth=LW_HAIRLINE, format_xy=True, scatter_zorder=Z_MARKER,
+                         **kwargs):
     """
     Plot the scatter and line for the outbound and homebound data
     :param ax:
@@ -28,6 +29,9 @@ def plot_oh_scatter_line(ax, ys, xs=None, scatter_colors=None, markersize=MS_ARE
     :param markersize:
     :param labels:
     :param line_color:
+    :param scatter_zorder: z-order for the two marker sets. Defaults to the ``Z_MARKER``
+        tier this used to hardcode, so existing callers are unchanged; pass ``Z_RAW_TRACE``
+        to put the markers *below* a group/smoothed line drawn on the same axes.
     :param kwargs:
     :return: out_scatter, home_scatter, line (for legend)
     """
@@ -45,9 +49,9 @@ def plot_oh_scatter_line(ax, ys, xs=None, scatter_colors=None, markersize=MS_ARE
     if len(labels) == 1:
         labels = [labels[0]]*2
     out_scatter = ax.scatter(xs[::2], ys[::2], marker="^", s=markersize, color=scatter_colors[0], alpha=alpha,
-                         label=labels[0], zorder=10)
+                         label=labels[0], zorder=scatter_zorder)
     home_scatter = ax.scatter(xs[1::2], ys[1::2], marker="v", s=markersize, color="white", alpha=alpha,
-                          edgecolor=scatter_colors[1], label=labels[1], zorder=10)
+                          edgecolor=scatter_colors[1], label=labels[1], zorder=scatter_zorder)
 
     # plot line
     if line_color is not None:
@@ -568,7 +572,7 @@ def add_distance_colorbar(fig, axes, sm, n_pos, fraction=0.03, pad=0.02, cax=Non
         cb = fig.colorbar(sm, ax=list(np.ravel(axes)), fraction=fraction, pad=pad,
                           ticks=[1, n_pos - 1])
     if show_ticklabels:
-        cb.ax.set_yticklabels(["close\n(reward)", "far\n(start)"], fontsize=TICK_SIZE)
+        cb.ax.set_yticklabels(["Close\n(reward)", "Far\n(start)"], fontsize=TICK_SIZE)
     else:
         cb.ax.set_yticklabels([])
     if label:

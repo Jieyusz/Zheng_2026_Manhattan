@@ -24,13 +24,9 @@ gs20 = gs0[0].subgridspec(1, 5, hspace=0.01, width_ratios=[1, 1, 1, 0.1, 1.2])
 d_similarity_list = figure_data_dict["Wildtype D similarity matrices"]
 axes_mat = [FIG.add_subplot(gs20[j]) for j in range(4)]
 # axes_off_diag = [FIG.add_subplot(gs20b[j]) for j in range(3)]
-# Example animal is config.MASK_D_SIMILARITY_EXAMPLE_ID (was a hardcoded len-1 here); see
-# that constant for which animal it is and why the index is fragile.
-j_oo, j_hh, j_oh_prime = d_similarity_list[config.MASK_D_SIMILARITY_EXAMPLE_ID]
-assert min(j_oo.shape) >= config.SIMILARITY_EXAMPLE_MIN_SIDE, (
-    f"MASK_D_SIMILARITY_EXAMPLE_ID={config.MASK_D_SIMILARITY_EXAMPLE_ID} selects a "
-    f"{j_oo.shape} matrix; the similarity list order changes when "
-    "gen_ac_generalization/gen_wildtype_d_data are regenerated, so re-pick the index.")
+# The example animal is chosen by content (the richest triplet), not by a positional index:
+# the saved list is reordered by every regeneration. See utils.select_similarity_example.
+j_oo, j_hh, j_oh_prime = utils.select_similarity_example(d_similarity_list)
 plot_utils.plot_maskd_similarity_matrix(axes_mat, j_oo=j_oo, j_hh=j_hh, j_oh_prime=j_oh_prime,
                                         labels=list(config.SIMILARITY_LATEX.values()),
                                         axis_labels=config.TRAVERSE_LATEX,
@@ -65,11 +61,11 @@ for k, mats in enumerate(d_similarity_list):
 axes_off_diagonal[1].yaxis.set_visible(False)
 axes_off_diagonal[2].yaxis.set_visible(False)
 for ax, mat_type in zip(axes_off_diagonal, config.SIMILARITY_LATEX.values()):
-    ax.text(0.5, 1, mat_type, ha="center", va="bottom", fontsize=plot_utils.TICK_SIZE, transform=ax.transAxes)
+    plot_utils.add_panel_title(ax, mat_type, fontsize=plot_utils.TICK_SIZE)
     ax.set_xlim(0, 20)
     ax.set_ylim(0, 0.4)
     ax.set_xlabel("k-th off diagonal", )
-    ax.set_ylabel("Mean Similarity", )
+    ax.set_ylabel("Mean similarity", )
 
 gs00 = gs0[2].subgridspec(1, 7, width_ratios=[0.1, 3, 3, 3, 3, 3, 3], wspace=0.1)
 axes_f = [FIG.add_subplot(gs00[i]) for i in range(7)]
@@ -85,7 +81,7 @@ for ax, (tr_idx, path_df) in zip(axes_f[1:], utils.iter_example_bout_paths(
                               plot_symbol=True, linewidth=config.LW_EMPHASIS,
                               marker_color=all_colors[-3:][config.MASK_D_EXAMPLE_ID],
                               plot_start_time=True, plot_duration=False, title="")
-    ax.text(0.5, 1, f"{utils.to_traverse_number(tr_idx)}", ha="center", va="bottom", fontsize=plot_utils.FONT_SIZE, transform=ax.transAxes,)
+    plot_utils.add_panel_title(ax, f"{utils.to_traverse_number(tr_idx)}")
 plot_utils.plot_illustrative_cbar(axes_f[0], aspect=20)
 
 # row 4 plot the different node set

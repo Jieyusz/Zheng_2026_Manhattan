@@ -8,7 +8,8 @@ import matplotlib.pyplot as plt
 import matplotlib.patheffects as patheffects
 from scipy import stats
 from manhattan_maze.plot_constants import (CAPSIZE, FONT_SIZE, LW_EMPHASIS, LW_HAIRLINE,
-                                            MS_AREA_SMALL, MS_PT_SMALL, TICK_SIZE, Z_REFERENCE)
+                                            MS_AREA_SMALL, MS_PT_SMALL, PARAM_ANNOTATION_Y,
+                                            TICK_SIZE, Z_REFERENCE)
 from manhattan_maze.plot_utils import add_signficance_bracket, add_symbol_for_p_value, format_value_str, format_xs_ys, gap_to_str, genotype_colors, plot_array_data, plot_box, plot_jittered_scatter
 
 __all__ = ['plot_time_series_kruskal_results', 'plot_kruskal_results_at_single_point', 'plot_aggregated_choice_ratios', 'plot_offpath_choice_ratios', 'plot_grouped_memory', 'plot_group_scatter_box_comparison', 'plot_pairwise_results_across_bars', 'plot_late_early_comparison', 'plot_gap_comparison_series', 'get_param_ci', 'annotate_param_estimate', 'plot_param_estimate_with_ci', 'plot_ci_shade', 'plot_ci_ratios']
@@ -173,7 +174,7 @@ def plot_offpath_choice_ratios(ax, transition_dict, colors, smooth_func=None, sm
                zorder=Z_REFERENCE, label="Chance")
 
 
-def plot_grouped_memory(ax, gap_array_list, xunit="traverse", yunit="duration (s)", upper_y=None, plot_day=True, **kwargs):
+def plot_grouped_memory(ax, gap_array_list, xunit="traverse", yunit="Duration (s)", upper_y=None, plot_day=True, **kwargs):
     """
     plot arrays of data, that come in the formats of gap_array_list: a list of tuples of (gap, data_array),
     where gap is a tuple of (start_day, end_day) and data_array is a 2D array of shape (n_sessions, n_traverses)
@@ -206,7 +207,7 @@ def plot_grouped_memory(ax, gap_array_list, xunit="traverse", yunit="duration (s
 
 
 def plot_group_scatter_box_comparison(ax, data_dict, kruskal_results, upper_y=None,
-                                      colordict=None, markersize=MS_AREA_SMALL, ylabel="n(reward) 1st hour", plot_ns=False,
+                                      colordict=None, markersize=MS_AREA_SMALL, ylabel="N(reward) 1st hour", plot_ns=False,
                                       plot_pairwise=True, plot_scatter=True, scatter_only=None,
                                       markerdict=None, open_markers=None):
     """
@@ -306,7 +307,7 @@ def plot_late_early_comparison(axes, durations, midpoint=10, endpoint=20, **plot
 
 
 def plot_gap_comparison_series(axes, gap_durations, color="tab:grey", midpoint=10, upper_y=200, stats_type="median",
-                               ylabel="Duration(s)", **plot_array_data_kwargs):
+                               ylabel="Duration (s)", **plot_array_data_kwargs):
     """
     Compare the late previous session with early next session with a certain size of gap.
     """
@@ -426,9 +427,12 @@ def annotate_param_estimate(ax, x, estimate, ci_lower, ci_upper, y, color, zorde
         prec = format_value_str(estimate)
     lo_err = estimate - ci_lower
     hi_err = ci_upper - estimate
+    # These digits are annotation, not notation, so they follow the sans body font. The
+    # mathtext wrapper is still needed to stack the +hi/-lo superscript, so the digits go
+    # through \mathregular, which binds to font.family instead of the maths font.
     value_str = (
-        rf"${estimate:.{prec}g}$" + "\n" +
-        rf"$^{{+{hi_err:.{prec}g}}}_{{-{lo_err:.{prec}g}}}$"
+        rf"$\mathregular{{{estimate:.{prec}g}}}$" + "\n" +
+        rf"$^{{\mathregular{{+{hi_err:.{prec}g}}}}}_{{\mathregular{{-{lo_err:.{prec}g}}}}}$"
     )
     # white outline keeps the label readable where it overlaps the error bars
     ax.text(x, y, value_str, va="top", color=color, fontweight="bold",
@@ -444,7 +448,7 @@ def plot_param_estimate_with_ci(ax, x, summary_df, param_name, color, ylim,
 
     Shared core of the curve-fit supplementary panels: looks the parameter up via
     :func:`get_param_ci`, draws the error bar at ``x``, and (by default) writes the
-    ``annotate_param_estimate`` value label just above the axes (axes fraction 1.12),
+    ``annotate_param_estimate`` value label just above the axes (``PARAM_ANNOTATION_Y``),
     so it tracks the axes rather than the data ``ylim``.
 
     Returns
@@ -458,7 +462,8 @@ def plot_param_estimate_with_ci(ax, x, summary_df, param_name, color, ylim,
     ax.errorbar(x, estimate, yerr=yerr, color=color, fmt=".", markersize=markersize, capsize=capsize)
     if annotate:
         prec = format_value_str(ylim[1])
-        annotate_param_estimate(ax, x, estimate, ci_lower, ci_upper, 1.12, color, prec=prec, zorder=10)
+        annotate_param_estimate(ax, x, estimate, ci_lower, ci_upper, PARAM_ANNOTATION_Y, color,
+                                prec=prec, zorder=10)
     return estimate, ci_lower, ci_upper
 
 

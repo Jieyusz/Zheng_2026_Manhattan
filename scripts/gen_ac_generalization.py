@@ -64,7 +64,11 @@ def main():
     ac_gen_all_names = []
     for mask in ["A", "B", "C", "D", "E"]:
         ac_gen_all_names.extend(count_df[count_df.Mask==mask].Highly_rewarded_animal_list.values[0].split(", "))
-    ac_gen_names = list(set(ac_gen_all_names))# unique
+    # sorted(), not list(set()): Python salts string hashing per process, so a bare set()
+    # gave this cohort -- and the row order of every array and list derived from it -- a
+    # different order on every regeneration run. That is what made positional example
+    # indices into the saved lists go stale. Does not reorder the existing on-disk cache.
+    ac_gen_names = sorted(set(ac_gen_all_names))  # unique, deterministic
     ac_gen_df = utils.create_mask_learn_seq_df(acortical_mdf, ac_gen_names, mask_list=["A", "B", "C", "D", "E"])
     ac_gen_df = ac_gen_df[ac_gen_df.Mask_order>0]
     ct_gen_df = utils.create_mask_learn_seq_df(control_mdf, control_names, mask_list=["A", "B", "C", "D", "E"])

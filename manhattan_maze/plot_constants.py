@@ -19,6 +19,27 @@ LABEL_SIZE = 10   # panel letters (A, B, C...)
 FONT_SIZE = 8     # axis labels, titles, in-panel text
 TICK_SIZE = 6     # tick labels, legends, colorbar ticks, significance text
 
+# --- Panel headings -------------------------------------------------------------------
+# Gap in POINTS between a panel heading and the top of its axes. Points, not axes fraction:
+# a fraction offset scales with the panel, so the same ``y=1.15`` is a visibly different gap
+# over a tall panel than over a short one -- which is how the headings drifted apart in the
+# first place. Consumed by ``plot_style.add_panel_title``, the house replacement for
+# ``ax.set_title``.
+TITLE_PAD = 2.0
+
+# Axes fraction at which the two-line value/CI annotation band is top-anchored above a
+# parameter-comparison panel (``plot_stats.annotate_param_estimate``). A heading over such
+# a panel has to hang above the *band*, not above the spine, so it passes this as
+# ``add_panel_title(..., anchor=PARAM_ANNOTATION_Y)`` and still gets the standard
+# TITLE_PAD gap -- measured from the band instead of from the top spine.
+PARAM_ANNOTATION_Y = 1.12
+
+# Extra points a maze-schematic heading needs on top of TITLE_PAD. The "O" port marker is
+# drawn half a tile beyond the Out port, and its glyph box measures ~3 pt clear of the top
+# spine, so a heading hung TITLE_PAD above the *spine* lands on the marker. Adding this
+# keeps the standard gap, measured from the marker instead.
+PORT_MARKER_CLEARANCE = 4.0
+
 # --- Line widths: 4-tier emphasis hierarchy -------------------------------------------
 # Also applied to spines/ticks via set_style, so the axis frame no longer out-weighs the
 # data it frames (matplotlib's default axes.linewidth is 0.8).
@@ -26,6 +47,14 @@ LW_HAIRLINE = 0.5    # reference/chance lines, box + whisker, error bars, faint 
 LW_DATA = 1.0        # standard data / group-mean line
 LW_EMPHASIS = 1.5    # fitted curves, shortest paths, highlighted graph edges
 LW_TRAJECTORY = 3.0  # trajectory LineCollection ribbons
+
+# --- Opacity -------------------------------------------------------------------------
+# Raw per-animal points/traces that sit UNDER a group mean or a smoothed line. The value
+# matches what plot_curves already used as literals for exactly this job: 0.45 for faint
+# per-animal traces under a group curve, 0.5 for scatter dots under a fitted curve.
+# Pair it with a lowered z-order (Z_RAW_TRACE) -- fading alone leaves the raw markers
+# stacked on top of the line they are supposed to sit behind.
+ALPHA_FAINT = 0.45
 
 # --- Marker sizes, pt^2 AREA: for ``ax.scatter(s=...)`` -------------------------------
 # NOTE the units. Everything routed through plot_jittered_scatter / plot_oh_scatter_line /

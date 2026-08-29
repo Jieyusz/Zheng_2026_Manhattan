@@ -17,10 +17,10 @@ gs0 = FIG.add_gridspec(3,1, height_ratios=[1, 1, 1], wspace=0.01, hspace=0.01)
 gs10 = gs0[0].subgridspec(1, 1)
 ax_o = FIG.add_subplot(gs10[0])
 o_intervals = [((0, 0), figure_data_dict["Acortical Mask O reward intervals"][:, :20])] + figure_data_dict["Acortical Mask O memory intervals"]
-plot_utils.plot_grouped_memory(ax_o, o_intervals, upper_y=50*60, yunit="Interval (s)", xunit="Reward",
+plot_utils.plot_grouped_memory(ax_o, o_intervals, upper_y=50*60, yunit="Interval (s)", xunit="reward",
                                stats_type="mean", plot_shade=True, markersize=config.MS_AREA_SMALL,
                                scatter_colors=[plot_utils.mask_colors["O"]], connect_scatters=True)
-ax_o.set_title("Mask O", fontsize=plot_utils.FONT_SIZE, color=plot_utils.mask_colors["O"])
+plot_utils.add_panel_title(ax_o, "Mask O", color=plot_utils.mask_colors["O"])
 
 # speed in Mask A
 gs20 = gs0[1].subgridspec(1, 4, width_ratios=[5, 1, 1, 1])
@@ -52,7 +52,7 @@ for ax, (day, path_df) in zip(axes_traj, utils.iter_example_bout_paths(example_s
     plot_utils.plot_bout_path(ax, path_df, mask_a, plot_colorbar=False, plot_duration=True,
                               plot_symbol=True, linewidth=config.LW_DATA, noise=0.15,
                               marker_color=plot_utils.genotype_colors["Acortical"], title="")
-    ax.text(0.5, 1, f"Day{day+1}", ha="center", va="bottom", fontsize=plot_utils.TICK_SIZE, transform=ax.transAxes)
+    plot_utils.add_panel_title(ax, f"Day{day+1}", fontsize=plot_utils.TICK_SIZE)
 # add a colorbar
 plot_utils.plot_illustrative_cbar(FIG.add_subplot(gs10[-1]), aspect=10, label_loc="right")
 

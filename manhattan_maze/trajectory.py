@@ -937,7 +937,7 @@ class Session:
         xs = np.arange(len(av))+window_size//2 # center the x values
         ax.plot(xs, av, color=color, label=label, **line_kwargs)
         ax.set_ylim(bottom=0)
-        ax.set_ylabel("average choice %")
+        ax.set_ylabel("Average choice %")
 
         if plot_rewards: # if plot rewards along with the number of transitions
             # plot n rewards in the background
@@ -945,7 +945,7 @@ class Session:
             ax.plot(np.arange(len(reward_counts)), reward_counts, color=reward_color, **line_kwargs, label="Rewards")
 
         # add title:
-        ax.set_xlabel("n(transitions)")
+        ax.set_xlabel("N(transitions)")
         ax.set_title(
             f"{self.name}: {start_node} to {end_node}",
             fontsize=plot_utils.TICK_SIZE)
@@ -1102,8 +1102,8 @@ class Session:
         Parameters
         ----------
         reward_df : pandas.DataFrame
-            Reward LED frames for the experiment (columns ``rwd_1``, ``rwd_2``).
-            Frames are absolute video frame numbers.
+            Reward LED frames for the experiment (columns ``rwd_1``, ``rwd_2``;
+            see data contract §9). Frames are absolute video frame numbers.
         end_frame_window : int or None, default None
             If given, only consider frames within this many frames after
             ``first_frame`` (to avoid noise in late frames). If None, use the

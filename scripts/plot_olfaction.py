@@ -91,7 +91,7 @@ for condition, ax in zip(["Pre-swap", "Post-swap"], [ax_err_pre, ax_err_post]):
     plot_utils.format_xs_ys(ax, utils.to_traverse_number(np.arange(20)), xlabel="Traverse #", ylabel="Turn error rate", ylim=0.5)
     # Chance level: the approach-conditioned turn error rate has an exact 0.5 chance.
     ax.axhline(y=0.5, color="black", linestyle="--", linewidth=config.LW_HAIRLINE, zorder=config.Z_REFERENCE)
-    ax.text(0.5, 1, condition, ha="center", va="bottom", transform=ax.transAxes, fontsize=plot_utils.FONT_SIZE)
+    plot_utils.add_panel_title(ax, condition)
     if condition == "Post-swap":  # share the pre-swap y-axis
         ax.set_yticklabels([])
         ax.set_ylabel("")

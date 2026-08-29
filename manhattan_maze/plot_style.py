@@ -2,41 +2,89 @@
 
 Split out of plot_utils.py.
 """
+import logging
+
 import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
-import matplotlib.font_manager as font_manager
 from matplotlib.colorbar import Colorbar
 from matplotlib.ticker import MaxNLocator
+from matplotlib.transforms import ScaledTranslation
 from manhattan_maze.plot_constants import (FONT_SIZE, LABEL_SIZE, LW_DATA, LW_HAIRLINE,
-                                            MS_AREA_LARGE, MS_PT_SMALL, TICK_SIZE, Z_REFERENCE)
+                                            MS_AREA_LARGE, MS_PT_SMALL, TICK_SIZE, TITLE_PAD,
+                                            Z_REFERENCE)
 from manhattan_maze.plot_utils import bout_type_color_dict
 
-__all__ = ['set_style', 'draw_vertical_parallelogram', 'draw_rhombus', 'draw_ellipse', 'draw_arrow', 'add_direction_arrows', 'set_distance_plot_yaxis', 'format_xs_ys', 'plot_illustrative_cbar', 'plot_phase_lines', 'set_corridor_steps_axis', 'add_lines_to_matrix_plot', 'add_squares_to_matrix_plot', 'add_symbol_for_p_value', 'add_signficance_bracket', 'format_yaxis_color', 'add_letter_labels', 'get_legend_objects_as_dict', 'distance_reward_marker', 'session_distance_plot_label', 'axis_format_with_color', 'create_legend_for_double_axes', 'gap_to_str', 'color_bouts_from_indices', 'get_normalized_color_seq', 'format_value_str']
+__all__ = ['set_style', 'draw_vertical_parallelogram', 'draw_rhombus', 'draw_ellipse', 'draw_arrow', 'add_direction_arrows', 'set_distance_plot_yaxis', 'format_xs_ys', 'plot_illustrative_cbar', 'plot_phase_lines', 'set_corridor_steps_axis', 'add_lines_to_matrix_plot', 'add_squares_to_matrix_plot', 'add_symbol_for_p_value', 'add_signficance_bracket', 'format_yaxis_color', 'add_letter_labels', 'add_panel_title', 'get_legend_objects_as_dict', 'distance_reward_marker', 'session_distance_plot_label', 'axis_format_with_color', 'create_legend_for_double_axes', 'gap_to_str', 'color_bouts_from_indices', 'get_normalized_color_seq', 'format_value_str']
 
 def set_style():
     """
     Apply the manuscript-wide matplotlib style to the global ``rcParams``.
 
-    Sets serif / Computer-Modern fonts, math-text rendering, 300 dpi, and the
+    Sets sans-serif (Arial) annotation, Computer-Modern maths, 300 dpi, and the
     module font sizes (``FONT_SIZE`` / ``TICK_SIZE``).  Call this once at the top
     of any figure-producing script before plotting.
 
+    Typography, and why it is split this way
+    ----------------------------------------
+    *Annotation* -- axis labels, tick numbers, legends, panel letters, in-panel
+    text -- is sans-serif, on reviewer request, because it is easier to read at
+    small size: Liberation Sans has a 22.5% larger x-height than ``cmr10`` at the
+    same point size and the same advance width to within 0.2%, so the legibility
+    is gained without widening anything (measured page-size change across all
+    figures: -0.11% to 0.00%).
+
+    *Mathematics* stays Computer Modern.  ``mathtext.fontset`` is deliberately
+    left at ``'cm'`` rather than switched to a sans fontset, so every ``$...$``
+    symbol -- Latin and Greek alike -- is unchanged, and matches the
+    Computer-Modern inline maths of ``main.tex``.  Rebuilding the maths font
+    instead (``mathtext.fontset='custom'`` with ``mathtext.it='cmmi10'``) looks
+    equivalent but is not: ``cmmi10.ttf`` carries a 148-entry legacy TeX cmap with
+    no Unicode entries for Greek, so ``\\delta`` and friends silently fall through
+    to a substitute italic while ``D`` and ``E`` do not.
+
     Notes
     -----
+    ``axes.formatter.use_mathtext`` is what routes numeric tick labels through the
+    maths font, so it must be off for tick digits to pick up the sans family.  That
+    is safe here only because no figure uses a log axis or scientific-notation
+    offset -- log formatters emit mathtext regardless of this flag.  Re-enable it
+    and tick digits revert to serif.
+
+    ``axes.unicode_minus`` is now True.  It was False as a ``cmr10`` workaround
+    (cmr10 has no U+2212); with mathtext off the minus sign would otherwise
+    degrade to an ASCII hyphen.
+
     These settings were previously applied at import time, which mutated global
     matplotlib state as a side effect of ``import plot_utils`` (R6).  They now
     live here so that importing the module is side-effect-free; scripts opt in
-    explicitly via ``plot_utils.set_style()``.  Reads the bundled ``cmr10.ttf``
-    Computer-Modern font shipped with matplotlib.
+    explicitly via ``plot_utils.set_style()``.
     """
-    cmfont = font_manager.FontProperties(fname=mpl.get_data_path() + '/fonts/ttf/cmr10.ttf')
-    mpl.rcParams['mathtext.fontset'] = 'cm'
-    mpl.rcParams['font.family'] = 'serif'
-    mpl.rcParams['font.serif'] = cmfont.get_name()
-    mpl.rcParams['axes.formatter.use_mathtext'] = True
-    mpl.rcParams['axes.unicode_minus'] = False
+    # matplotlib's bundled Computer Modern faces (cmr10, cmmi10, cmsy10, cmex10) carry
+    # head.created == head.modified == 0. fontTools reads that as a pre-1970 date, 'corrects'
+    # it, and logs two lines about it for every font of every savefig -- 42 lines across the
+    # figure set. The correction is right and the embedded font is fine, so this is pure
+    # noise, but it buries real output. It reaches us because the two settings below pull
+    # every $...$ glyph out of those faces and subset them through fontTools on PDF save.
+    # Note this is a logging record, not a warnings warning: -W / PYTHONWARNINGS filters do
+    # nothing to it, and it is never deduplicated.
+    logging.getLogger("fontTools").setLevel(logging.ERROR)
+    mpl.rcParams['mathtext.fontset'] = 'cm'      # maths untouched; see docstring
+    mpl.rcParams['font.family'] = 'sans-serif'
+    # Ordered fallback chain: only the first entry that resolves is ever embedded.
+    # All four share Arial metrics (Arial clones Helvetica, Nimbus clones Helvetica;
+    # Liberation Sans is Arial-metric), so any substitution among them is layout-safe.
+    # DejaVu Sans is deliberately absent: it is 13% wider, and matplotlib already falls
+    # back to it when nothing resolves *with a findfont warning* -- listing it would
+    # silence that warning and quietly rescale every label.
+    mpl.rcParams['font.sans-serif'] = ['Arial', 'Helvetica', 'Liberation Sans', 'Nimbus Sans']
+    mpl.rcParams['axes.formatter.use_mathtext'] = False
+    mpl.rcParams['axes.unicode_minus'] = True
+    # Default 3 embeds each glyph as a procedural drawing; Type 42 subsets are compact
+    # and are what journal production systems expect.
+    mpl.rcParams['pdf.fonttype'] = 42
+    mpl.rcParams['ps.fonttype'] = 42
     mpl.rcParams['axes.grid'] = False
     mpl.rcParams['figure.max_open_warning'] = False
     mpl.rcParams['figure.dpi'] = 300
@@ -339,6 +387,58 @@ def add_letter_labels(FIG, xys, string_sequence="ABCDEFGHIJK"):
         FIG.text(x, y, string_sequence[i], fontsize=LABEL_SIZE, fontweight="bold", va="top", ha="left")
 
 
+def add_panel_title(ax, text, pad=TITLE_PAD, fontsize=FONT_SIZE, anchor=1.0, **kwargs):
+    """
+    Draw a centred heading above ``ax``, offset by a fixed gap measured in points.
+
+    The house replacement for ``ax.set_title``.  Every panel heading in the manuscript
+    figures goes through here so that the gap between the text and the top of the panel is
+    the same everywhere.
+
+    Why points, not an axes fraction
+    --------------------------------
+    ``ax.text(0.5, 1.15, ...)`` offsets by 15% of the *panel height*, so the identical line
+    of code yields a large gap over a tall panel and a small one over a short one; these
+    figures mix panels that differ four-fold in height on a single page.  Composing a
+    ``ScaledTranslation`` (inches, via ``dpi_scale_trans``) onto ``ax.transAxes`` instead
+    pins the gap to ``pad`` points regardless of panel geometry or ``fontsize``.
+
+    Relationship to constrained layout
+    ----------------------------------
+    The returned ``Text`` is a child of the axes, so ``Axes.get_tightbbox`` picks it up and
+    constrained layout reserves room for it, multi-line headings included -- ``set_title``
+    is *not* required for that.  What ``set_title`` does buy is a pad that cannot feed back
+    into the layout solver, and the points-based offset here has that property too: an
+    axes-fraction offset shrinks as the solver shrinks the axes to accommodate it.
+
+    Parameters
+    ----------
+    ax : matplotlib.axes.Axes
+    text : str
+        Heading, ``\n`` for a second line.
+    pad : float
+        Gap in points between ``anchor`` and the heading's text box.
+    anchor : float
+        Axes fraction the gap is measured from; ``1.0`` (default) is the top spine.  Raise
+        it for a panel that already draws something above its spine, so the heading clears
+        that instead of colliding with it -- the parameter-comparison panels pass
+        ``anchor=PARAM_ANNOTATION_Y`` to sit above their value/CI band.  The *gap* stays
+        ``pad`` either way; only what it is measured from changes.
+    fontsize : float
+        Defaults to ``FONT_SIZE``; small sub-panel grids pass ``TICK_SIZE``.  The gap is
+        unaffected either way, being measured from the text box rather than the glyphs.
+    **kwargs
+        Forwarded to ``ax.text`` (``color``, ``fontweight``, ...).
+
+    Returns
+    -------
+    matplotlib.text.Text
+    """
+    offset = ScaledTranslation(0, pad / 72, ax.figure.dpi_scale_trans)
+    return ax.text(0.5, anchor, text, transform=ax.transAxes + offset,
+                   ha="center", va="bottom", fontsize=fontsize, **kwargs)
+
+
 def get_legend_objects_as_dict(ax, sort=True):
     """
     Get the legend objects as a dictionary with label as key and list of handles as value
@@ -398,7 +498,15 @@ def create_legend_for_double_axes(ax, ax2, **kwargs):
     for ul in unique_labels:
         ul_handles = [h for h, l in zip(handles, labels) if l == ul]
         final_handles.append(tuple(ul_handles))
-    ax.legend(final_handles, unique_labels, fontsize=TICK_SIZE, **kwargs)
+    legend = ax.legend(final_handles, unique_labels, fontsize=TICK_SIZE, **kwargs)
+    # A legend key has to stay readable however faint the data it stands for. Matplotlib
+    # copies the source artist's alpha into the key, so de-emphasised data (e.g. the faded
+    # per-traverse markers in plot_individual_memory) would wash out the key too.
+    # ``legend_handles`` are the legend's own copies, so this does not touch the plotted data.
+    for handle in legend.legend_handles:
+        if handle is not None:
+            handle.set_alpha(1.0)
+    return legend
 
 
 def gap_to_str(gap):

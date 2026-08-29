@@ -61,7 +61,7 @@ gs0 = FIG.add_gridspec(2, 3)
 
 # row 1: how quickly the Acortical mice re-learn on each new 9-turn mask
 row1_panels = [(acortical_mask_dict("reward intervals"), "Reward #", "Interval (s)", 15 * 60),
-               (acortical_mask_dict("sortie counts"), "Reward #", "N(Sorties)", 40),
+               (acortical_mask_dict("sortie counts"), "Reward #", "N(sorties)", 40),
                (acortical_mask_dict("traverse duration", first_a_metric="duration"),
                 "Traverse #", "Duration (s)", 200)]
 axes_row1 = [FIG.add_subplot(gs0[0, i]) for i in range(3)]
@@ -70,8 +70,7 @@ for i, (ax, (data, xlabel, ylabel, ylim)) in enumerate(zip(axes_row1, row1_panel
     plot_utils.plot_array_comparison(ax, data, colordict=mask_color_dict, xlabel=xlabel,
                                      ylabel=ylabel, ylim=ylim, **CURVE_KWARGS)
     if i == 0:
-        ax.text(0.5, 1, "Mask A, B, C", fontsize=plot_utils.FONT_SIZE, ha="center",
-                va="bottom", transform=ax.transAxes)
+        plot_utils.add_panel_title(ax, "Mask A, B, C")
     else:
         ax.get_legend().remove()
 

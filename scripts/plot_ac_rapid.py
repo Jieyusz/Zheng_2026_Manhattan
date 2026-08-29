@@ -53,10 +53,9 @@ ax_raster = FIG.add_subplot(gs10[0])
 control_meta = figure_data_dict["Control A example bout meta"]
 control_manifest = figure_data_dict["Control A example manifest"]
 
-# Shared per-mouse control colours across the raster (A), the traverse reference (D),
-# and the curve traces (E/F). The control cohort arrays ("Control Mask A ...") are
-# built in control_first_a order, but the raster examples are a random subset of that
-# cohort. Each example's cohort row is recorded in the manifest by
+# Shared per-mouse control colours across the raster (A) and the traverse reference (D).
+# The control cohort arrays ("Control Mask A ...") are built in control_first_a order, but
+# the raster examples are a random subset of that cohort. Each example's cohort row is recorded in the manifest by
 # gen_acortical_learning.py, which knows the selection indices directly -- this replaces
 # the numerical identity join on per-traverse durations that used to recover it here.
 # Colours are chosen for visibility as thin lines / small markers (all from Dark2 for
@@ -65,6 +64,8 @@ control_manifest = figure_data_dict["Control A example manifest"]
 # orange)): the raster examples take grey, pink/magenta in order (so "Control 1" is grey,
 # "Control 2" is the Dark2 pink/magenta), and the remaining cohort mouse takes green.
 CONTROL_PALETTE = [plt.cm.Dark2(7), plt.cm.Dark2(3), plt.cm.Dark2(4)]  # grey, pink/magenta, green
+# Loaded only for its row count and control_first_a ordering, which the colour map below
+# is defined against -- the array itself is no longer plotted (E/F show no control).
 control_cohort_duration = figure_data_dict["Control Mask A duration"]
 
 # Map each cohort row -> colour: raster examples (in raster order) get the leading
@@ -97,7 +98,7 @@ tiles_per_corridor = utils.select_by_prefix(figure_data_dict, config.GENOTYPES, 
 
 kruskal_results =  utils.kruskal_with_pairwise_mann_whitney(tiles_per_corridor, alternative="greater")
 plot_utils.plot_group_scatter_box_comparison(ax_tpc, tiles_per_corridor, kruskal_results,
-                                             ylabel="tiles/corridor", scatter_only=["Control"])
+                                             ylabel="Tiles/corridor", scatter_only=["Control"])
 
 axes_traverses = [FIG.add_subplot(gs20[i+1]) for i in range(2)]
 
@@ -152,29 +153,27 @@ for i, ax in enumerate(axes_traverses):
     ax.set_xlim(left=-300, right=0)
 # hide the y axis of the right plot
 axes_traverses[1].yaxis.set_visible(False)
-axes_traverses[0].set_title("Outbound traverses", fontsize=plot_utils.FONT_SIZE)
-axes_traverses[1].set_title("Homebound traverses", fontsize=plot_utils.FONT_SIZE)
+plot_utils.add_panel_title(axes_traverses[0], "Outbound traverses")
+plot_utils.add_panel_title(axes_traverses[1], "Homebound traverses")
 
 # add colorbar to the right
 ax_cbar = FIG.add_subplot(gs20[-1])
 plot_utils.plot_illustrative_cbar(ax_cbar, ticklabels=["Early", "Late"], label_loc="right")
 
 # row 2: traverse duration and error plot.
-# Acortical (n=4) and Wildtype (n=25) get fitted curves + bootstrap CI bands; the
-# n=3 control cohort is too small for a meaningful animal-level bootstrap CI (only
-# ~6 distinct resamples), so it is shown as raw per-animal traces instead.
+# Only Acortical (n=4) and Wildtype (n=25) appear, as fitted curves + bootstrap CI bands.
+# The n=3 control cohort is not summarised here at all: its animal-level bootstrap has only
+# ~10 distinct resamples, so n=3 supports neither a meaningful CI nor a cohort exponential
+# fit (which would overfit). Faint per-animal control traces used to stand in for that
+# summary, but they obscured the acortical/wildtype contrast these panels exist to show.
+# The control's Mask-A trajectory lives in the ac_oa_supp cohort means, and its per-animal
+# fit parameters in ac_curve.
 wildtype_fit_result = figure_data_dict["Wildtype two day duration fit results"][(1, "A")] # Day-1 Mask A reference
 duration_fit_results = {**utils.select_by_prefix(figure_data_dict, config.GENOTYPES[:1], "A duration fit results"),
                         "Wildtype": wildtype_fit_result}
 gs30 = gs0[3].subgridspec(1, 3, width_ratios= [1, 1, 0.5])
 ax_duration = FIG.add_subplot(gs30[0])
-# Control traces are coloured per mouse by cohort row (control_color_by_cohort), the
-# same colours the raster (A) assigns those mice; row order matches the cohort arrays
-# so trace i and raster mouse i share a colour. All three colours appear together in
-# the "Control" legend entry.
 plot_utils.plot_curve_fit_comparison(ax_duration, result_dict=duration_fit_results,
-                                     raw_traces_dict={"Control": control_cohort_duration},
-                                     raw_trace_colors={"Control": control_color_by_cohort},
                                      xlim=20, upper_y=400, xlabel="Traverse #", ylabel="Duration (s)", plot_scatter=False)
 # error rate
 wildtype_error = figure_data_dict["Wildtype two day turn error rate fit results"][(1, "A")] # Day-1 Mask A reference
@@ -182,8 +181,6 @@ error_fit_results = {**utils.select_by_prefix(figure_data_dict, config.GENOTYPES
                      "Wildtype": wildtype_error}
 ax_error = FIG.add_subplot(gs30[1])
 plot_utils.plot_curve_fit_comparison(ax_error, result_dict=error_fit_results,
-                                     raw_traces_dict={"Control": figure_data_dict["Control Mask A turn error rate"]},
-                                     raw_trace_colors={"Control": control_color_by_cohort},
                                      xlim=20, upper_y=0.6, xlabel="Traverse #", ylabel="Turn error rate", plot_scatter=False)
 ax_error.get_legend().remove()
 # Add curve-derived ratio confidence intervals. Only the Wildtype/Acortical ratio
@@ -195,8 +192,7 @@ sub_df = summary[summary.Comparison.str.contains("Wildtype")]
 plot_utils.plot_ci_ratios(ax_ratio, sub_df,
                           param_latex=config.PARAM_LATEX, color=plot_utils.genotype_colors["Wildtype"])
 
-ax_ratio.text(0.5, 1, "Wildtype/Acortical", fontsize=plot_utils.FONT_SIZE, color="black", ha="center", va="bottom",
-              transform=ax_ratio.transAxes)
+plot_utils.add_panel_title(ax_ratio, "Wildtype/Acortical", color="black")
 
 plot_utils.add_letter_labels(FIG, [(0.01, 0.99),  (0.01, 0.78), (0.01, 0.52), (0.26, 0.52), (0.01, 0.26), (0.39, 0.26), (0.77, 0.26)])
 # # add a dashed line on FIG to divde mask D and Mask A panels

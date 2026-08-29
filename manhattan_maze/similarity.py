@@ -4,7 +4,11 @@ Split out of utils.py; see docs.
 """
 import numpy as np
 
-__all__ = ['transition_vec_similarity', 'cosine_similarity', 'jaccard_similarity', 'self_similarity_matrix', 'get_average_traverse_similarity', 'get_mat_mean_diagonal']
+__all__ = ['transition_vec_similarity', 'cosine_similarity', 'jaccard_similarity', 'self_similarity_matrix', 'get_average_traverse_similarity', 'get_mat_mean_diagonal', 'select_similarity_example', 'SIMILARITY_EXAMPLE_MIN_SIDE']
+
+# Smallest matrix side an example triplet must have to be worth drawing. Most animals
+# contribute a 1x1 matrix (a single traverse pair), which renders as one meaningless cell.
+SIMILARITY_EXAMPLE_MIN_SIDE = 10
 
 def transition_vec_similarity(bmatrix_1, bmatrix_2, n_guaranteed_transitions):
     """
@@ -212,3 +216,64 @@ def get_mat_mean_diagonal(mat):
         values = mat[diag_mask]
         off_diagonal[diagonal_offset] = np.nanmean(values)
     return off_diagonal
+
+
+def _triplet_min_side(triplet):
+    """Smallest side across all three matrices of a similarity triplet; 0 if degenerate."""
+    sides = []
+    for m in triplet:
+        if m is None:
+            return 0
+        arr = np.asarray(m)
+        if arr.ndim < 2:      # a 0-d/1-d entry is not a similarity matrix
+            return 0
+        sides.append(min(arr.shape))
+    return min(sides)
+
+
+def select_similarity_example(similarity_list, min_side=SIMILARITY_EXAMPLE_MIN_SIDE):
+    """
+    Pick the example animal for a Mask-D route-similarity triplet by content, not position.
+
+    Returns the ``(j_oo, j_hh, j_oh_prime)`` entry whose *smallest* matrix side is largest --
+    the animal with the most traverses, and so the most informative example.
+
+    Why not an index
+    ----------------
+    These lists are built in ``gen_ac_generalization.py`` / ``gen_wildtype_d_data.py``, whose
+    cohort order comes from ``set(...)``.  Python salts string hashing per process, so the
+    order is different on every regeneration run, and a positional index into the result is
+    only valid until the next regen -- which is exactly how the old
+    ``ACORTICAL_D_SIMILARITY_EXAMPLE_ID`` went stale and started selecting a 1x1
+    (single-traverse-pair) entry.  Scoring on content is immune to the reshuffle *and* keeps
+    choosing the same mouse for as long as the underlying data is unchanged.
+
+    The list is also shorter than the session list (zero-traverse sessions are skipped at
+    generation time), so its indices never lined up with anything else either.
+
+    Parameters
+    ----------
+    similarity_list : sequence of (j_oo, j_hh, j_oh_prime)
+        As saved under ``"<genotype> D similarity matrices"``.  Entries may legitimately be
+        ``None`` or 1x1, and the three matrices of one entry may differ in shape.
+    min_side : int, optional
+        Reject entries whose smallest side is below this.
+
+    Returns
+    -------
+    tuple of np.ndarray
+        The chosen ``(j_oo, j_hh, j_oh_prime)``.
+
+    Raises
+    ------
+    ValueError
+        If no entry clears ``min_side``.
+    """
+    sides = [_triplet_min_side(t) for t in similarity_list]
+    best = int(np.argmax(sides)) if sides else None
+    if best is None or sides[best] < min_side:
+        raise ValueError(
+            f"No similarity triplet reaches min_side={min_side}: {len(similarity_list)} "
+            f"entries with smallest sides {sides}. Either the cohort changed or the data "
+            f"was regenerated with too few traverses per animal.")
+    return similarity_list[best]

@@ -50,8 +50,7 @@ for j, (title, key, color, xticklabels) in enumerate(sortie_panels):
         open_markers={"O-O"}, markersize=config.MS_AREA_LARGE,
         ylabel="Sorties per journey" if j == 0 else "", plot_ns=True, upper_y=10)
     ax.set_xticklabels(xticklabels, fontsize=plot_utils.TICK_SIZE)  # annotate the cage-side port
-    ax.text(0.5, 1, title, color=color, fontsize=plot_utils.FONT_SIZE,
-            ha="center", va="bottom", transform=ax.transAxes)
+    plot_utils.add_panel_title(ax, title, color=color)
 
 # Row 2: Mask A turn error rate, West (main-text cohort) vs North (post cage relocation).
 # The outbound (away from cage, filled ^) and homebound (toward cage, open v) legs are drawn
@@ -77,7 +76,7 @@ for j, (cond, key, dir_labels) in enumerate(turn_panels):
     plot_utils.format_xs_ys(ax, utils.to_traverse_number(np.arange(error_array.shape[1])), xlabel="Traverse #", ylabel="Turn error rate", ylim=0.5)
     # Chance level: the approach-conditioned turn error rate has an exact 0.5 chance.
     ax.axhline(0.5, color="black", linestyle="--", linewidth=config.LW_HAIRLINE, zorder=config.Z_REFERENCE)
-    ax.text(0.5, 1, f"Mask A ({cond})", color=color, fontsize=plot_utils.FONT_SIZE, ha="center", va="bottom", transform=ax.transAxes)
+    plot_utils.add_panel_title(ax, f"Mask A ({cond})", color=color)
     ax.legend(handles=[h_out, h_home], labels=dir_labels,
               loc="upper right", bbox_to_anchor=(1, 1), fontsize=plot_utils.TICK_SIZE)
     if j == 1:  # share the West y-axis

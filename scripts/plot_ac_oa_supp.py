@@ -23,9 +23,8 @@ ax_tile = FIG.add_subplot(gs00[0])
 tiles_per_corridor = utils.select_by_prefix(figure_data_dict, config.GENOTYPES, "Mask O tiles per corridor")
 kruskal_results = utils.kruskal_with_pairwise_mann_whitney(tiles_per_corridor, alternative="greater")
 plot_utils.plot_group_scatter_box_comparison(ax_tile, tiles_per_corridor, kruskal_results,
-                                             ylabel="tiles/corridor")
-ax_tile.text(0.5, 1, "Mask O", fontsize=plot_utils.FONT_SIZE, ha="center", va="bottom", transform=ax_tile.transAxes,
-             color=plot_utils.mask_colors["O"])
+                                             ylabel="Tiles/corridor")
+plot_utils.add_panel_title(ax_tile, "Mask O", color=plot_utils.mask_colors["O"])
 
 # reward interval
 ax_o = FIG.add_subplot(gs00[1])
@@ -40,7 +39,8 @@ plot_utils.plot_array_comparison(ax_sortie, sortie_counts, stats_type="mean", xl
                                  ylabel="N(sorties)", plot_shade=True, connect_scatters=True, ylim=50)
 
 # Mask A results. Panel order follows the Results narrative: the repetition/inefficiency measures
-# (speed, sorties, tile and corridor errors) come first, then the learning curves.
+# (speed, sorties, tile and corridor errors) come first, then the learning curves. See
+# docs/figure_panel_audit.md.
 # row 2: D speed, E sortie counts, F tile error rate
 gs10 = gs0[1].subgridspec(1, 3, wspace=0.05)
 ax_speed = FIG.add_subplot(gs10[0])
@@ -48,8 +48,7 @@ at_speed = utils.select_by_prefix(figure_data_dict, config.GENOTYPES[:2], "Mask 
 plot_utils.plot_array_comparison(ax_speed, at_speed, plot_shade=True, connect_scatters=True, stats_type="mean", xlabel="Traverse #", linewidth=config.LW_DATA,
                                  ylabel="Speed (tiles/s)", ylim=3.5)
 speed_results = utils.time_point_kruskal_mann_whitney_u_test(at_speed, alternative="greater")
-ax_speed.text(0.5, 1, "Mask A", fontsize=plot_utils.FONT_SIZE, ha="center", va="bottom", transform=ax_speed.transAxes,
-             color=plot_utils.mask_colors["A"])
+plot_utils.add_panel_title(ax_speed, "Mask A", color=plot_utils.mask_colors["A"])
 
 ax_sorties = FIG.add_subplot(gs10[1])
 at_sorties = utils.select_by_prefix(figure_data_dict, config.GENOTYPES[:2], "Mask A sortie counts")
@@ -96,7 +95,7 @@ for genotype in config.GENOTYPES:
     ax_beta.fill_between(bx[ok], (bmean - bse)[ok], (bmean + bse)[ok], color=color, alpha=0.25, lw=0)
 ax_beta.set_xlim(0.1, 0.9)
 ax_beta.set_ylim(0, 1)
-ax_beta.set_xlabel("fraction of the 1st journey")
+ax_beta.set_xlabel("Fraction of the 1st journey")
 ax_beta.set_ylabel(r"Forward bias $\hat{\beta}$")
 ax_beta.legend(loc="upper left", fontsize=plot_utils.TICK_SIZE)
 # Panel order is deliberate and grouped by mask, not by mention order: row 1 is Mask O

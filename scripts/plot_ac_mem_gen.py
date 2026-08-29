@@ -68,8 +68,8 @@ for i, key in enumerate(gen_keys):
     sub_df = summary[summary.Comparison == f"{key}/First A"]
     plot_utils.plot_ci_ratios(ax_ratio, sub_df, param_latex=config.PARAM_LATEX,
                               color=mask_color_dict[key], offset=0.3 * (i - 1))
-ax_ratio.text(0.5, 1, "Generalization\nMask/First A", fontsize=plot_utils.TICK_SIZE,
-              color="black", ha="center", va="bottom", transform=ax_ratio.transAxes)
+plot_utils.add_panel_title(ax_ratio, "Generalization\nMask/First A",
+                           fontsize=plot_utils.TICK_SIZE, color="black")
 
 def acortical_gen_fit_dict(metric):
     """Build the {First A, Repeat A, Mask B, Mask C} fit-results dict for a metric.
@@ -127,7 +127,7 @@ tpc_for_kruskals = {"Acor. -": [tcp for j, tcp in tiles_per_corridor["Acortical"
                     "Control":tiles_per_corridor["Control"]}
 kruskal_results =  utils.kruskal_with_pairwise_mann_whitney(tpc_for_kruskals)
 
-def plot_unsuccessful_scatter_box(ax, tpc_for_kruskals, kruskal_results, plot_ns=True, ylabel="tiles/corridor",
+def plot_unsuccessful_scatter_box(ax, tpc_for_kruskals, kruskal_results, plot_ns=True, ylabel="Tiles/corridor",
                                   plot_pairwise=True, markersize=config.MS_AREA_SMALL):
     """Plot per-group jittered scatter + box with pairwise-significance brackets.
 
@@ -190,7 +190,7 @@ def plot_unsuccessful_scatter_box(ax, tpc_for_kruskals, kruskal_results, plot_ns
     ax.set_ylabel(ylabel, fontsize=plot_utils.FONT_SIZE)
 
 plot_unsuccessful_scatter_box(ax_d_tpc, tpc_for_kruskals, kruskal_results)
-ax_d_tpc.text(0.5, 1, "Mask D", fontsize=plot_utils.FONT_SIZE, ha="center", va="bottom", transform=ax_d_tpc.transAxes)
+plot_utils.add_panel_title(ax_d_tpc, "Mask D")
 ax_d_tpc.tick_params(axis="x", rotation=45)
 
 

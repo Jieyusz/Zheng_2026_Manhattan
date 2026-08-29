@@ -16,10 +16,10 @@ import numpy as np
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 from matplotlib.legend_handler import HandlerTuple
-from manhattan_maze.plot_constants import (CAPSIZE, FONT_SIZE, LW_DATA, LW_HAIRLINE,
+from manhattan_maze.plot_constants import (ALPHA_FAINT, CAPSIZE, FONT_SIZE, LW_DATA, LW_HAIRLINE,
                                             LW_TRAJECTORY, MARKER_SIZE, MS_AREA_LARGE, TICK_SIZE,
-                                            Z_REFERENCE)
-from manhattan_maze.plot_utils import bout_type_color_dict, distance_reward_marker, format_yaxis_color, genotype_colors, plot_jittered_scatter, plot_maskd_corridor_interval, plot_oh_scatter_line, session_distance_plot_label, set_corridor_steps_axis
+                                            Z_DATA, Z_RAW_TRACE, Z_REFERENCE)
+from manhattan_maze.plot_utils import add_panel_title, bout_type_color_dict, distance_reward_marker, format_yaxis_color, genotype_colors, plot_jittered_scatter, plot_maskd_corridor_interval, plot_oh_scatter_line, session_distance_plot_label, set_corridor_steps_axis
 from manhattan_maze.plot_data import TRAVERSE_BOUT_TYPES
 from manhattan_maze.utils import make_colorline
 
@@ -124,8 +124,8 @@ def plot_corridor_discovery_pair(session, axes=None, fig=None, figsize=(2, 6), n
 
         plot_objects.append((line, scatter))
 
-    axes[0, 0].text(0.5, 1.05, "Outbound", transform=axes[0, 0].transAxes, ha="center", )
-    axes[0, 1].text(0.5, 1.05, "Homebound", transform=axes[0, 1].transAxes, ha="center", )
+    add_panel_title(axes[0, 0], "Outbound")
+    add_panel_title(axes[0, 1], "Homebound")
     # add theoretical
     if session.mask.name != "D":
         plot_markov_in_p10(axes[1, 0], color_list=["tab:pink", "tab:grey"], linestyle="--", linewidth=LW_HAIRLINE)
@@ -155,11 +155,11 @@ def plot_markov_comparisons_average_steps(session, axes=None, fig=None, figsize=
     mask.plot_corridor_average_steps(axes[0], order_by_corridor_indices=True, model_type="Zero order",
                                      corridor_order_indices=corridor_order_indices,
                                      plot_numbers=True)
-    axes[0].set_title("Zero-order Markov", fontsize=FONT_SIZE)
+    add_panel_title(axes[0], "Zero-order Markov")
     mask.plot_corridor_average_steps(axes[1], order_by_corridor_indices=True, model_type="First order",
                                      corridor_order_indices=corridor_order_indices, probability=1,
                                      plot_numbers=True)
-    axes[1].set_title("1st-order Markov (forward p=1)", fontsize=FONT_SIZE)
+    add_panel_title(axes[1], "1st-order Markov (forward p=1)")
     # plot the session
     session.plot_corridor_average_steps(axes[2], maskd_special_params=maskd_special_params)
     # hide y axis
@@ -169,7 +169,24 @@ def plot_markov_comparisons_average_steps(session, axes=None, fig=None, figsize=
 
     return fig, axes
 
-def plot_individual_memory(ax, metric_dict, averaging_func, a_days, axes_colors=None, unit="traverse", **kwargs):
+def plot_individual_memory(ax, metric_dict, averaging_func, a_days, axes_colors=None, unit="traverse",
+                           scatter_alpha=ALPHA_FAINT, scatter_zorder=Z_RAW_TRACE, **kwargs):
+    """
+    Per-traverse points for one animal, with a width-5 moving average over each day.
+
+    The raw points are deliberately de-emphasised -- faded to ``scatter_alpha`` and dropped
+    to ``scatter_zorder`` -- so the smoothed line reads as the primary signal. Both are
+    needed: at full z-order the markers are drawn over the line and break it up at every
+    crossing, so fading alone is not enough.
+
+    ``scatter_alpha`` / ``scatter_zorder`` are separate parameters rather than part of
+    ``**kwargs`` because ``**kwargs`` is forwarded to the mean line as well as to the
+    markers -- an ``alpha`` passed there would fade the line by the same amount, which is
+    the opposite of the intent.
+
+    Callers: fig:ac_mem_gen A (duration/turn error) and fig:ac_mem_supp B (speed), plus
+    ``scripts/defense_plots.py::fig_ac_memory_example``, which inherits these defaults.
+    """
     # one axis per metric; a twin y-axis is added only when a second metric is given
     metric_names = list(metric_dict.keys())
     if len(metric_names) == 1:
@@ -189,9 +206,12 @@ def plot_individual_memory(ax, metric_dict, averaging_func, a_days, axes_colors=
             xs = np.arange(n_traverses)+ j*n_traverses+1
             ys = metric_array[j]
             os, hs, _ = plot_oh_scatter_line(axes[k], ys=ys, xs=xs, scatter_colors=[axes_colors[k], axes_colors[k]],
-                                             line_color=None, format_xy=False, **kwargs,)
+                                             line_color=None, format_xy=False, alpha=scatter_alpha,
+                                             scatter_zorder=scatter_zorder, **kwargs,)
             ays = averaging_func(ys, window_size=5, mode="valid")
-            axes[k].plot(xs[2:-2], ays, color=axes_colors[k], **kwargs)
+            # Explicit z-order: without it the line lands on the Line2D default of 2, which
+            # is below the markers' old Z_MARKER tier.
+            axes[k].plot(xs[2:-2], ays, color=axes_colors[k], zorder=Z_DATA, **kwargs)
             axes[k].axvline(x=(j+1)*n_traverses+0.5, color="black", linestyle="--", linewidth=LW_HAIRLINE,
                             zorder=Z_REFERENCE)
 
@@ -286,8 +306,7 @@ def plot_relative_memory(axes, ratio_dict, raw_dict, day_gaps=None, format_title
             plot_jittered_scatter(axes[i], label_index, raw_ratios, color)
 
     if format_title:
-        axes[0].text(0.5, 1.02, f"Overnight", ha="center", va="bottom",
-                         transform=axes[0].transAxes, fontsize=TICK_SIZE)
+        add_panel_title(axes[0], "Overnight", fontsize=TICK_SIZE)
 
     for i, ax in enumerate(axes):
         ax.set_ylim([0, 1.1])
@@ -296,8 +315,7 @@ def plot_relative_memory(axes, ratio_dict, raw_dict, day_gaps=None, format_title
             gap = day_gaps[i]
             axes[i].yaxis.set_visible(False)
             if format_title:
-                axes[i].text(0.5, 1.02, f"{gap[0]}- to {gap[1] - 1}-day Gap", ha="center", va="bottom",
-                             transform=axes[i].transAxes, fontsize=TICK_SIZE)
+                add_panel_title(axes[i], f"{gap[0]}- to {gap[1] - 1}-day Gap", fontsize=TICK_SIZE)
             ax.set_xticks([0, 1])
             ax.set_xticklabels(categories[:-1])
             ax.set_xlim([-0.4, 1.4])
@@ -413,7 +431,11 @@ def plot_bout_path(ax, path_df, mask, fig=None, noise=0.1, fig_size=(3, 3),
     ax.set_xlim(left=0, right=mask.size)
     if title is None:
         title = _bout_path_title(path_df, mask)
-    ax.set_title(title, fontsize=FONT_SIZE)
+    # Callers pass title="" to suppress the heading. set_title("") was a no-op; an empty
+    # ax.text is not -- zero width but a full line height, which it would claim in the
+    # axes' tight bbox and so shift the surrounding layout.
+    if title:
+        add_panel_title(ax, title)
 
 
 def _bout_path_title(path_df, mask):
@@ -753,7 +775,7 @@ def plot_speed_hist(ax, step_df, color, session_span_s, in_maze_end_s, bw=3, tm=
         hist = ax.plot(bin_centers, rate, color=color, **kwargs)
 
     ax.set_xlabel("Time in maze (s)", )
-    ax.set_ylabel(f"{unit}s/s", )
+    ax.set_ylabel(f"{unit.capitalize()}s/s", )
     return hist
 
 

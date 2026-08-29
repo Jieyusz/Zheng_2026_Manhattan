@@ -11,7 +11,7 @@ import matplotlib.patches as mpatches
 from itertools import permutations
 from manhattan_maze.plot_constants import (FONT_SIZE, LW_DATA, LW_HAIRLINE, MS_AREA_LARGE,
                                             TICK_SIZE)
-from manhattan_maze.plot_utils import add_direction_arrows, draw_arrow, draw_ellipse, draw_rhombus, draw_vertical_parallelogram, format_xs_ys, get_normalized_color_seq, ob_condition_color_dict, plot_illustrative_cbar
+from manhattan_maze.plot_utils import add_direction_arrows, add_panel_title, draw_arrow, draw_ellipse, draw_rhombus, draw_vertical_parallelogram, format_xs_ys, get_normalized_color_seq, ob_condition_color_dict, plot_illustrative_cbar
 
 __all__ = ['plot_schematic_3d_maze', 'plot_schematic_swap_maze', 'plot_schematic_cage_swap', 'plot_schematic_path_graph', 'plot_tile_path_graph', 'plot_schematic_d_graph', 'plot_maskd_corridor_interval', 'plot_maskd_similarity_matrix', 'plot_allocentric_turn_seq', 'plot_biclique_transitions_colormap', 'plot_markov_schematics', 'format_mask_d_zones', 'format_path_graph_zones', 'plot_hole_decision_schematic', 'add_biclique_arrows', 'node_position', 'plot_corridor_transition_schematic', 'plot_circle_with_signal_values', 'plot_edges_based_on_adj_mat', 'plot_goal_signal', 'plot_exponential_schematic', 'plot_d2_session_timeline', 'plot_ablation_timeline']
 
@@ -298,7 +298,9 @@ def plot_schematic_swap_maze(axes, **schematic_kwargs):
     # add a horizontal from left to right
     draw_arrow(axes[1], x=0.25, y=0.5, dx=0.5, dy=0, w=0.1, color="black")
     axes[1].text(0.5, 0.4, s="Swap", horizontalalignment="center", verticalalignment="center", fontsize=TICK_SIZE)
-    axes[1].text(0.5, 0.6, s=r"$\sim20$ rewards", fontsize=TICK_SIZE, horizontalalignment="center", verticalalignment="center")
+    # Only the tilde stays inside mathtext (Liberation Sans has no U+223C); the count
+    # and the word are annotation and follow the sans body font.
+    axes[1].text(0.5, 0.6, s=r"$\sim$20 rewards", fontsize=TICK_SIZE, horizontalalignment="center", verticalalignment="center")
     axes[1].axis("off")
 
 
@@ -339,12 +341,12 @@ def plot_schematic_cage_swap(axes, **schematic_kwargs):
     # plot the cage location
     axes[0].text(-0.1, 0.25, s="Cage", color="tab:blue", horizontalalignment="center", verticalalignment="center", transform=axes[0].transAxes,
                  bbox=dict(boxstyle="round,pad=0.2", facecolor="none", edgecolor="tab:blue", linewidth=LW_HAIRLINE))
-    axes[0].text(0.5, 1, s="West", horizontalalignment="center", verticalalignment="center", transform=axes[0].transAxes)
+    add_panel_title(axes[0], "West")
     _add_return_route_label(axes[0], "Homebound")
     plot_schematic_3d_maze(axes[-1], **schematic_kwargs, reverse_arrow=False)
     axes[-1].text(1, 0.8, s="Cage", color="tab:orange",horizontalalignment="center", verticalalignment="center", transform=axes[-1].transAxes,
                   bbox=dict(boxstyle="round,pad=0.2", facecolor="none", edgecolor="tab:orange", linewidth=LW_HAIRLINE))
-    axes[-1].text(0.5, 1, s="North", horizontalalignment="center", verticalalignment="center", transform=axes[-1].transAxes)
+    add_panel_title(axes[-1], "North")
     _add_return_route_label(axes[-1], "To O (cage)")
     # add a horizontal from left to right
     axes[1].text(0.5, 0.5, s="vs.", horizontalalignment="center", verticalalignment="center")
@@ -816,15 +818,15 @@ def plot_maskd_similarity_matrix(axes, j_oo, j_hh, j_oh_prime, labels=None, axis
     else:
         mat_axes, cbar_ax = axes, None
 
-    # empty when label_fontsize is None, so the rcParams default is left untouched
+    # empty when label_fontsize is None, so add_panel_title's FONT_SIZE default applies
     fs = {} if label_fontsize is None else {"fontsize": label_fontsize}
 
     mat_axes[0].imshow(j_oo, cmap=cmap, vmin=0, vmax=1, **kwargs)
-    mat_axes[0].text(0.5, 1, s=labels[0], ha="center", va="bottom", transform=mat_axes[0].transAxes, **fs)
+    add_panel_title(mat_axes[0], labels[0], **fs)
     mat_axes[1].imshow(j_hh,cmap=cmap, vmin=0, vmax=1, **kwargs)
-    mat_axes[1].text(0.5, 1, s=labels[1], ha="center", va="bottom", transform=mat_axes[1].transAxes, **fs)
+    add_panel_title(mat_axes[1], labels[1], **fs)
     mat_axes[2].imshow(j_oh_prime, cmap=cmap, vmin=0, vmax=1, **kwargs)
-    mat_axes[2].text(0.5, 1, s=labels[2], ha="center", va="bottom", transform=mat_axes[2].transAxes, **fs)
+    add_panel_title(mat_axes[2], labels[2], **fs)
     for k, ax in enumerate(mat_axes):
         ax.set_aspect("equal", adjustable="box")
 

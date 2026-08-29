@@ -12,7 +12,7 @@ code stays diff-comparable with the source; they are intentionally NOT renamed.
 
 import numpy as np
 from manhattan_maze import plot_utils
-import matplotlib.cm as cm
+import matplotlib.pyplot as plt
 
 # Endotaxis learning parameters live in scripts/config.py
 # (config.ENDOTAXIS_LEARNING_PARAMETERS); callers pass them into Learn_Mouse_tr.
@@ -228,8 +228,11 @@ def draw_walk(axes, Ps, Ss, start_time=0, end_time=None, cmap="plasma", start_co
         start_corr=Ps1[0]
     if end_corr is None:
         end_corr=Ps1[-1]
-    # set nan value to be black
-    new_cmap = cm.get_cmap(cmap)
+    # set nan value to be black. .copy() matters: plt.get_cmap returns the *registered*
+    # colormap object when handed a Colormap (rather than a name), so set_bad would mutate
+    # the global instance for the rest of the process -- every later panel drawn with that
+    # colormap would inherit a black bad-value. Copying keeps the change local.
+    new_cmap = plt.get_cmap(cmap).copy()
     new_cmap.set_bad(color="black")
     Ss1 = np.array(Ss1)
     masked_signal = np.ma.masked_where(np.abs(Ss1-np.log(0.1))<1e-5, Ss1)

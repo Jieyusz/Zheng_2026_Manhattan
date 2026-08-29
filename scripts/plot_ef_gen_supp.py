@@ -34,7 +34,7 @@ for ax, (tr_idx, path_df) in zip(axes_traverses, utils.iter_example_bout_paths(
         figure_data_dict["Acortical E traverse example bout meta"])):
     plot_utils.plot_bout_path(ax, path_df, masks["E"], plot_colorbar=False, plot_duration=True,
                               plot_symbol=True, linewidth=config.LW_DATA, noise=0.15, title="")
-    ax.text(0.5, 1, f"{utils.to_traverse_number(tr_idx)}", ha="center", va="bottom", fontsize=plot_utils.FONT_SIZE, transform=ax.transAxes)
+    plot_utils.add_panel_title(ax, f"{utils.to_traverse_number(tr_idx)}")
 axes_traverses[0].text(-0.15, 1.01, "Traverse #", ha="left", va="bottom", fontsize=plot_utils.TICK_SIZE, transform=axes_traverses[0].transAxes)
 
 # plot reward interval comparison

@@ -50,7 +50,7 @@ for session_idx in range(n_sessions): # each figure panel
             )
             plot_objects.append((line, shade_obj))
     # format axes
-    axes_list[0][session_idx].set_title(f"Day 2.{session_idx + 1}", fontsize=plot_utils.FONT_SIZE)
+    plot_utils.add_panel_title(axes_list[0][session_idx], f"Day 2.{session_idx + 1}")
     for k, ax_row in enumerate(axes_list):
         if k != 1 and k != 6:  # keep the x tick marks but drop the numbers/label
             ax_row[session_idx].tick_params(axis="x", labelbottom=False)

@@ -69,7 +69,7 @@ gs0 = FIG.add_gridspec(2, 1)
 # row 1: genotype comparison under Mask D
 gs00 = gs0[0].subgridspec(1, 3)
 d_panels = [(mask_d_dict("reward intervals", "reward intervals"), "Reward #", "Interval (s)", 30 * 60),
-            (mask_d_dict("sortie counts", "sortie counts"), "Reward #", "N(Sorties)", 30),
+            (mask_d_dict("sortie counts", "sortie counts"), "Reward #", "N(sorties)", 30),
             (mask_d_dict("traverse duration", "duration"), "Traverse #", "Duration (s)", 300)]
 axes_d = [FIG.add_subplot(gs00[i]) for i in range(3)]
 for i, (ax, (data, xlabel, ylabel, ylim)) in enumerate(zip(axes_d, d_panels)):
@@ -78,8 +78,7 @@ for i, (ax, (data, xlabel, ylabel, ylim)) in enumerate(zip(axes_d, d_panels)):
     plot_utils.plot_array_comparison(ax, data, xlabel=xlabel, ylabel=ylabel, ylim=ylim,
                                      **CURVE_KWARGS)
     if i == 0:
-        ax.text(0.5, 1, "Mask D", fontsize=plot_utils.FONT_SIZE, ha="center",
-                va="bottom", transform=ax.transAxes)
+        plot_utils.add_panel_title(ax, "Mask D")
     else:
         ax.get_legend().remove()
 
@@ -95,11 +94,9 @@ for i, (ax, (data, xlabel, ylabel, ylim)) in enumerate(zip(axes_d, d_panels)):
 gs10 = gs0[1].subgridspec(1, 6, width_ratios=[1.55, 1.55, 1.55, 0.1, 0.95, 0.8])
 axes_mat = [FIG.add_subplot(gs10[j]) for j in range(4)]
 ac_similarity_list = figure_data_dict["Acortical D similarity matrices"]
-j_oo, j_hh, j_oh_prime = ac_similarity_list[config.ACORTICAL_D_SIMILARITY_EXAMPLE_ID]
-assert min(j_oo.shape) >= config.SIMILARITY_EXAMPLE_MIN_SIDE, (
-    f"ACORTICAL_D_SIMILARITY_EXAMPLE_ID={config.ACORTICAL_D_SIMILARITY_EXAMPLE_ID} selects a "
-    f"{j_oo.shape} matrix; most entries in this list are 1x1 (a single traverse pair) and the "
-    "list order reshuffles when gen_ac_generalization.py is regenerated, so re-pick the index.")
+# Chosen by content (the richest triplet), not a positional index -- most entries here are
+# 1x1 (a single traverse pair) and the list is reordered by every regeneration.
+j_oo, j_hh, j_oh_prime = utils.select_similarity_example(ac_similarity_list)
 # tick-size labels: at this panel width the titles and axis labels would otherwise take a
 # large share of the cell, and only spare width can enlarge the aspect-equal matrices
 plot_utils.plot_maskd_similarity_matrix(axes_mat, j_oo=j_oo, j_hh=j_hh, j_oh_prime=j_oh_prime,
@@ -121,8 +118,8 @@ plot_utils.plot_group_scatter_box_comparison(
 ax_sim_ac.set_xticklabels(list(config.SIMILARITY_LATEX.values()))
 # rotated as in panel F: the three J labels overprint each other at this panel width
 ax_sim_ac.tick_params(axis="x", rotation=45)
-ax_sim_ac.text(0.5, 1, "Acortical", fontsize=plot_utils.TICK_SIZE, ha="center", va="bottom",
-               transform=ax_sim_ac.transAxes, color=plot_utils.genotype_colors["Acortical"])
+plot_utils.add_panel_title(ax_sim_ac, "Acortical", fontsize=plot_utils.TICK_SIZE,
+                           color=plot_utils.genotype_colors["Acortical"])
 
 # genotype comparison: one value per animal, averaged over the three similarity groups
 ax_sim_gt = FIG.add_subplot(gs10[5])

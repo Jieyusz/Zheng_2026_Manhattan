@@ -92,7 +92,7 @@ for ax, tr_idx in zip(axes_f[1:], config.EXAMPLE_TRAVERSE_INDICES):
     plot_utils.plot_bout_path(ax, utils.derive_bout_path_table(path_df, bout_row), mask,
                               plot_colorbar=False, plot_duration=True, plot_symbol=True,
                               linewidth=config.LW_EMPHASIS, marker_color=plt.cm.tab10(example_id), title="")
-    ax.text(0.5, 1, f"{utils.to_traverse_number(tr_idx)}", ha="center", va="bottom", fontsize=plot_utils.FONT_SIZE, transform=ax.transAxes)
+    plot_utils.add_panel_title(ax, f"{utils.to_traverse_number(tr_idx)}")
 plot_utils.plot_illustrative_cbar(axes_f[0], aspect=20)
 axes_f[1].text(-0.1, 1.01, "Traverse #", ha="left", va="bottom", fontsize=plot_utils.TICK_SIZE, transform=axes_f[1].transAxes)
 

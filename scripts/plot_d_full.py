@@ -40,7 +40,7 @@ for ax, (tr_idx, path_df) in zip(axes_b, utils.iter_example_bout_paths(
     plot_utils.plot_bout_path(ax, path_df, figure_data_dict["masks"]["D"], plot_colorbar=False,
                               plot_duration=True, plot_symbol=True, linewidth=config.LW_EMPHASIS,
                               marker_color=plt.cm.tab10(5), title="")
-    ax.text(0.5, 1, f"{utils.to_traverse_number(tr_idx)}", ha="center", va="bottom", fontsize=plot_utils.FONT_SIZE, transform=ax.transAxes)
+    plot_utils.add_panel_title(ax, f"{utils.to_traverse_number(tr_idx)}")
 
 # row 2: plot traverse metrics
 gs10 = gs0[1].subgridspec(1, 2, hspace=0.05, width_ratios=[1, 1])

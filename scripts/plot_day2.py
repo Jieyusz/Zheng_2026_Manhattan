@@ -26,8 +26,8 @@ axes_a = [FIG.add_subplot(gs00[i]) for i in range(2)]
 for i, mask_name in enumerate(["B", "C"]):
     mask = figure_data_dict["masks"][mask_name]
     ax = axes_a[i]
+    # plot_with_shortest_path draws the "Mask <name>" heading itself, in the mask colour
     _, lc = mask.plot_with_shortest_path(ax, plot_ho=True, holes_list=None) # plot Home and Out for marking
-    ax.set_title(f"Mask {mask_name}", fontsize=plot_utils.FONT_SIZE)
     ax.axis("off")
 axes_a[0].text(0.5, -0.05, "LRLRRRLLL", fontsize=plot_utils.FONT_SIZE, color=plot_utils.mask_colors["B"], transform=axes_a[0].transAxes,
                 fontweight="bold", va="top", ha="center")
@@ -69,8 +69,8 @@ for i, (ax, direction) in enumerate(zip(axes_c, ["outbound", "homebound"])):
 
 # hide the y axis of the right plot
 axes_c[1].yaxis.set_visible(False)
-axes_c[0].text(0.5, 1, "Outbound traverses", fontsize=plot_utils.FONT_SIZE, ha="center", va="bottom", transform=axes_c[0].transAxes)
-axes_c[1].text(0.5, 1, "Homebound traverses", fontsize=plot_utils.FONT_SIZE, ha="center", va="bottom", transform=axes_c[1].transAxes)
+plot_utils.add_panel_title(axes_c[0], "Outbound traverses")
+plot_utils.add_panel_title(axes_c[1], "Homebound traverses")
 
 
 # Row 4: curve fit results for predictions
@@ -126,7 +126,7 @@ def plot_two_day_curve_fit(axes, fit_results, upper_y=150, ylabel="Duration (s)"
 fit_axes = [[FIG.add_subplot(gs30[i, j]) for j in range(n_sessions+1)] for i in range(2)]
 duration_fit_results = figure_data_dict["Wildtype two day duration fit results"]
 plot_two_day_curve_fit(fit_axes[0], duration_fit_results, upper_y=150)
-fit_axes[0][0].text(0.5, 1, "Day 1", ha="center", va="bottom", transform=fit_axes[0][0].transAxes)
+plot_utils.add_panel_title(fit_axes[0][0], "Day 1")
 # add equation
 fit_axes[0][0].text(1, 0.8, r"$D= D_{\infty} + \left(D_0 - D_{\infty}\right)\exp\left[-\delta(b-1)\right]$",
                     fontsize=plot_utils.TICK_SIZE, ha="right", va="bottom", transform=fit_axes[0][0].transAxes)
@@ -138,7 +138,7 @@ FIG.legend(handles=by_labels.values(), labels=by_labels.keys(), bbox_to_anchor=(
                       handler_map={tuple: HandlerTuple(ndivide=None)},)
 for i in range(n_sessions):
     ax = fit_axes[0][i + 1]
-    ax.text(0.5, 1, f"Day 2.{i + 1}", ha="center", va="bottom", transform=ax.transAxes)
+    plot_utils.add_panel_title(ax, f"Day 2.{i + 1}")
 
 te_fit_results = figure_data_dict["Wildtype two day turn error rate fit results"]
 plot_two_day_curve_fit(fit_axes[1], te_fit_results, upper_y=0.5, ylabel="Turn error rate")
@@ -153,15 +153,13 @@ ax_ratio = FIG.add_subplot(gs0b[0])
 summary = figure_data_dict["Wildtype two day param ratios"]
 overnight = summary[(summary.Session=="2")&(summary.Mask=="A")]
 plot_utils.plot_ci_ratios(ax_ratio, overnight, param_latex=config.PARAM_LATEX, color=plot_utils.mask_colors["A"])
-ax_ratio.text(0.5, 1, "Overnight\nMask A Day 2.1/Day 1", fontsize=plot_utils.FONT_SIZE, color=plot_utils.mask_colors["A"], ha="center", va="bottom",
-              transform=ax_ratio.transAxes)
+plot_utils.add_panel_title(ax_ratio, "Overnight\nMask A Day 2.1/Day 1", color=plot_utils.mask_colors["A"])
 ax_ratio.set_xlabel("")
 
 ax_bc = FIG.add_subplot(gs0b[2])
 bvc_df = figure_data_dict["Wildtype day21 mask BC param ratios"]
 plot_utils.plot_ci_ratios(ax_bc, bvc_df, color="black", param_latex=config.PARAM_LATEX)
-ax_bc.text(0.5, 1, "Turn sequence\nDay 2.1 B/C", fontsize=plot_utils.FONT_SIZE, color="black", ha="center", va="bottom",
-              transform=ax_bc.transAxes)
+plot_utils.add_panel_title(ax_bc, "Turn sequence\nDay 2.1 B/C", color="black")
 ax_bc.set_xlabel("")
 
 # generaliation
@@ -171,8 +169,7 @@ for i, mask in enumerate(["A", "B", "C"]):
     sub_df = gen_median[gen_median.Mask==mask]
     plot_utils.plot_ci_ratios(ax_gen, sub_df, color=plot_utils.mask_colors[mask],
                               param_latex=config.PARAM_LATEX, offset=0.2*(i-1))
-ax_gen.text(0.5, 1, "Generalization\nDay 2.2+/Day 1", fontsize=plot_utils.FONT_SIZE, color="black",
-            ha="center", va="bottom", transform=ax_gen.transAxes)
+plot_utils.add_panel_title(ax_gen, "Generalization\nDay 2.2+/Day 1", color="black")
 
 
 plot_utils.add_letter_labels(FIG, [(0.01, 0.99), (0.42, 0.99), (0.01, 0.75),

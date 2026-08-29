@@ -8,8 +8,8 @@ save_path = config.parse_save_path()
 fig_width = 5.8
 fig_height = 5.5
 n_sessions = 5  # number of all sessions
-d_params = [("D_0", r"$D_0$(s)", (0, 290)), ("D_infty", r"$D_{\infty}$(s)", (0, 60)), ("delta", r"$\delta$(/traverse)", (-0.01, 0.8))]
-e_params = [("E_0", r"$E_0$", (0, 0.6)), ("E_infty", r"$E_{\infty}$", (-0.01, 0.3)), ("epsilon", r"$\epsilon$(/traverse)", (-0.01, 0.2))]
+d_params = [("D_0", r"$D_0$ (s)", (0, 290)), ("D_infty", r"$D_{\infty}$ (s)", (0, 60)), ("delta", r"$\delta$ (/traverse)", (-0.01, 0.8))]
+e_params = [("E_0", r"$E_0$", (0, 0.6)), ("E_infty", r"$E_{\infty}$", (-0.01, 0.3)), ("epsilon", r"$\epsilon$ (/traverse)", (-0.01, 0.2))]
 mask_list = ["A", "B", "C"]
 
 ## data loading (eventually will use the same for all files);
@@ -101,10 +101,13 @@ for axes_list, params in zip(duration_axes_list, d_params):
     for ax in axes_list:
         ax.set_xticklabels([])
 # add days
-duration_axes_list[0][0].text(0.5, 1.15, "Day 1", ha="center", va="bottom", transform=duration_axes_list[0][0].transAxes)
+# Row headings over parameter-comparison panels: these panels carry a value/CI
+# annotation band above their top spine, so the heading hangs the standard TITLE_PAD
+# gap above the *band* rather than above the spine.
+plot_utils.add_panel_title(duration_axes_list[0][0], "Day 1", anchor=config.PARAM_ANNOTATION_Y)
 for i in range(n_sessions-1):
     ax = duration_axes_list[0][i + 1]
-    ax.text(0.5, 1.15, f"Day 2.{i + 1}", ha="center", va="bottom", transform=ax.transAxes)
+    plot_utils.add_panel_title(ax, f"Day 2.{i + 1}", anchor=config.PARAM_ANNOTATION_Y)  # see above
 
 te_fit_results = figure_data_dict["Wildtype two day turn error rate fit results"]
 te_axes_list = [[FIG.add_subplot(gs1[i, j]) for j in range(n_sessions)] for i in np.arange(len(e_params))+len(d_params)]

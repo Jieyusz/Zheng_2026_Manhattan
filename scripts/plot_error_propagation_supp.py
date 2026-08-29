@@ -127,8 +127,7 @@ def plot_endotaxis_learning_a(gs, H_circle_x=1, V_circle_x=3, n_nodes=5, radius=
     axes_walk = [FIG.add_subplot(gs_row[i]) for i in range(2)]
     endotaxis.draw_walk(axes_walk, endo_seq, endo_signal, end_time=len(endo_seq),
                         end_corr=max(endo_seq))
-    axes_walk[0].text(0.5, 1.0, "Mask A", ha="center", va="bottom", transform=axes_walk[0].transAxes,
-                      fontsize=plot_utils.FONT_SIZE, color=plot_utils.mask_colors["A"])
+    plot_utils.add_panel_title(axes_walk[0], "Mask A", color=plot_utils.mask_colors["A"])
     axes_walk[0].set_xticks([0, 3, 5, 7, 9])
     axes_walk[0].set_xticklabels(["Home", 4, 6, 8, "Out"])
     axes_walk[0].set_xlabel("")   # Home->Out ticks already label the corridor axis; avoid
@@ -155,8 +154,7 @@ def plot_endotaxis_learning_a(gs, H_circle_x=1, V_circle_x=3, n_nodes=5, radius=
                                                H_circle_x=H_circle_x, n_nodes=n_nodes,
                                                V_circle_x=V_circle_x, y_scale=y_scale)
         first_mat = endo_adj[si]
-        axes_adj[k].text(0.5, 1.0, f"t={si}", ha="center", va="bottom", transform=axes_adj[k].transAxes,
-                         fontsize=plot_utils.FONT_SIZE, color=colors[k])
+        plot_utils.add_panel_title(axes_adj[k], f"t={si}", color=colors[k])
         axes_adj[k].axis("off")
         axes_adj[k].set_aspect("equal", adjustable="box")
         axes_adj[k].set_ylim([0, n_nodes * y_scale])
@@ -168,10 +166,9 @@ def plot_endotaxis_learning_a(gs, H_circle_x=1, V_circle_x=3, n_nodes=5, radius=
     ax_goal.set_xticks([0, 3, 5, 7, 9])
     ax_goal.set_xticklabels(["Home", 4, 6, 8, "Out"])
     ax_goal.set_xlabel("")
-    ax_goal.text(0.5, 1.0, f"t={step_indices[-1]}", ha="center", va="bottom",
-                 transform=ax_goal.transAxes, color=colors[-1], fontsize=plot_utils.FONT_SIZE)
+    plot_utils.add_panel_title(ax_goal, f"t={step_indices[-1]}", color=colors[-1])
     ax_bar = FIG.add_subplot(gs_row[6])
-    plot_utils.plot_illustrative_cbar(ax_bar, cmap="plasma", ticklabels=["low", "high"],
+    plot_utils.plot_illustrative_cbar(ax_bar, cmap="plasma", ticklabels=["Low", "High"],
                                       label_loc="right", aspect=5)
     return axes_walk[0]
 
@@ -240,11 +237,9 @@ ax_rl.set_xlim(ax0.get_xlim()[0], RL_MAX_TRAVERSE + 0.5)
 # Column direction titles: the two animal columns are outbound/homebound; each model column serves
 # both directions (identical prediction), labelled compactly.
 for c, (_, dname) in enumerate(DIRECTIONS):
-    ax_A[c].text(0.5, 1.0, dname.capitalize(), transform=ax_A[c].transAxes,
-                 ha="center", va="bottom", fontsize=plot_utils.TICK_SIZE)
+    plot_utils.add_panel_title(ax_A[c], dname.capitalize(), fontsize=plot_utils.TICK_SIZE)
 for c in (2, 3):
-    ax_A[c].text(0.5, 1.0, "Outbound/Homebound", transform=ax_A[c].transAxes,
-                 ha="center", va="bottom", fontsize=plot_utils.TICK_SIZE)
+    plot_utils.add_panel_title(ax_A[c], "Outbound/Homebound", fontsize=plot_utils.TICK_SIZE)
 
 # Shared traverse x-axis: number + "Traverse #" label only on the bottom row.
 for ax in ax_A:
